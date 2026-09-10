@@ -1,5 +1,4 @@
 # se-practice
-# AI-Driven Software Engineering
 
 Name: Shynbulat Kazbek
-Group: Thursday 9-12 am
+Group: Thursday 9:00-12:00 am

@@ -1,4 +1,4 @@
-```python
+
 def analyze_marks(marks, pass_mark=50):
     # Validate marks container
     if not isinstance(marks, list):

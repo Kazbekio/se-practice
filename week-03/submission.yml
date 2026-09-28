@@ -1,0 +1,38 @@
+schema: 1
+week: "03"
+
+student:
+  name: Shynbulat Kazbek
+  student_id: 24B032123
+  github: Kazbekio
+
+assistant:
+  tool: ChatGPT
+  model: GPT-5.6 Luna — Instant
+
+counts:
+  user_stories: 7
+  acceptance_criteria_sets: 3
+
+checker:
+  pass: 22
+  fail: 1
+  error: 0
+  commit: bbb75db
+
+assumptions:
+  overlap_touching_bookings: not-allowed
+  exactly_two_hours: allowed
+
+traceability:
+  use_cases_not_covered: []
+  stories_not_traced: [US-03]
+
+review_findings:
+  - "US-05 initially included out-of-scope features (adding rooms), so I rewrote it to match UC-04."
+  - "UC-06 Send confirmation had no story behind it at all until I manually added US-07."
+  - "AC-03 was added to explicitly test the boundary condition of bookings touching exactly, which the AI missed."
+
+honesty:
+  can_explain_everything_submitted: yes
+  ai_usage_disclosed: yes

@@ -224,25 +224,25 @@ $ python tests/validate_submission.py
 | | | | |  
 |-|-|-|-|  
 |   | **PASS** | **FAIL** | **ERROR** |   
-| check_requirements.py |   |   |   |   
+| check_requirements.py | 22 | 1 | 0 |   
    
 Commit these numbers were produced at (git rev-parse --short HEAD):  
-**Every FAIL, one line each: what it is and what you decided to do about it.** A FAIL you report and  
+**Every FAIL, one line each: what it is and what you decided to do about it.**   
+- US-7 (out-of-scope vocabulary): The checker flagged the word "maintenance" in US-05. I decided to keep it because it is used purely as the *reason* (the "so that" clause) for blocking a room, not to introduce a new maintenance request feature.   
+**Did you run the checks by hand instead of with Python?**No, I used the provided Python scripts.  
    
- explain costs you nothing.  
-**Did you run the checks by hand instead of with Python?** Say so here — it costs nothing, but it  
    
- has to be said.  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsScYxpg/h5VMYARvRrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA224BcUMk6pDAAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsSfYxZo/kSGMYQLPJrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA4qrBdGuSdJuAAAAAElFTkSuQmCC)  
 **10. Conclusion (150–200 words)**  
 Answer all three:  
-1. Which part of the generated requirements was most wrong, and how would you have caught it without  
-   
- a checker?  
+1. Which part of the generated requirements was most wrong, and how would you have caught it withouta checker?  
+The most incorrect part of the generated requirements was the out-of-scope creeping in the Admin stories. The AI initially generated stories for adding/updating room details (which is not allowed) and completely missed the "Send confirmation" use case. Without a checker, mapping stories to a strict traceability matrix is the best way to catch these gaps visually.  
 2. What did the assistant get right that would have taken you noticeably longer by hand?  
-3. You are handing these requirements to someone who will implement them, and you will not be in the  
+The AI excelled at generating the initial Given/When/Then structure for the acceptance criteria. Writing 10 criteria manually with correct boundary logic would have taken significantly longer. It also correctly applied standard PlantUML syntax for the use-case diagram without hallucinating unneeded dependencies.  
+3. You are handing these requirements to someone who will implement them, and you will not be in the room. Which single one would you rewrite first, and why?  
+If handing these over to a developer, I would rewrite US-03 (Student views their own bookings) first. Currently, it exists as a story but has no official Use Case tied to it, meaning a developer might implement it as an undocumented endpoint. It needs to be officially added to the system boundaries or merged into UC-01.  
    
- room. Which single one would you rewrite first, and why?  
+   
 Be specific. "The AI was useful" is worth nothing; "UC-06 had no story behind it until I wrote  
    
  US-07, and the checker is what told me" is worth everything.  

@@ -59,7 +59,7 @@ payments, fees, fines or penalties · check-in, attendance or QR codes · equipm
  colours, databases or servers.  
 **Two things the scenario deliberately does not settle.** Nobody will answer these for you:  
 1. A booking that **ends exactly when another begins** — is that an overlap under R3? No  
-2. Is **exactly two hours** allowed under R2, or must a booking be shorter than two hours?  
+2. Is **exactly two hours** allowed under R2, or must a booking be shorter than two hours?Only exactly 2 hours of booking is allowed, not shorter.  
 Decide both, write the decision into your assumptions, and declare it in submission.yml. **Either**  
  **  
  answer is accepted. Not deciding is not.**  

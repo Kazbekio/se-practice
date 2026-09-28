@@ -216,10 +216,60 @@ The biggest gap is US-03 having no corresponding Use Case. It reveals an archite
 **9. Checker runs**  
 Paste the **real terminal output** of both runs. A table with nothing behind it does not count.  
 $ python tests/check_requirements.py  
- (paste)  
-   
+ PASS   US-1  user-stories.md         no placeholders left  
+PASS   US-2  user-stories.md         7 stories, IDs US-01…US-07  
+PASS   US-3  user-stories.md         every story has the required sentence shape  
+PASS   US-4  user-stories.md         every story has a priority  
+PASS   US-5  user-stories.md         every story declares an assumption  
+PASS   US-6  user-stories.md         only Student and Administrator appear as roles  
+FAIL   US-7  user-stories.md         out-of-scope vocabulary: maintenance — either the assistant widened the scenario, or say why in lab-report.md  
+PASS   AC-1  acceptance-criteria.md  no placeholders left  
+PASS   AC-2  acceptance-criteria.md  three sections, all naming real stories: US-02, US-04, US-05  
+PASS   AC-3  acceptance-criteria.md  every section has 3 to 5 uniquely numbered criteria  
+PASS   AC-4  acceptance-criteria.md  all 10 criteria are complete Given/When/Then  
+PASS   AC-5  acceptance-criteria.md  every section covers an invalid or boundary case  
+PASS   AC-6  acceptance-criteria.md  2 assumptions listed before the criteria  
+PASS   AC-7  acceptance-criteria.md  both open questions are settled in the assumptions  
+PASS   PU-1  use-cases.puml          valid PlantUML block, no placeholders  
+PASS   PU-2  use-cases.puml          exactly two actors: Student, Administrator  
+PASS   PU-3  use-cases.puml          all six use cases present  
+PASS   PU-4  use-cases.puml          system boundary present  
+PASS   PU-5  use-cases.puml          no screens, databases or internal components  
+PASS   PU-6  use-cases.puml          no unjustified actor associations found  
+PASS   TR-1  traceability.md         all six use cases have a row  
+PASS   TR-2  traceability.md         every ID in the table resolves  
+PASS   TR-3  traceability.md         every story appears in the table  
+------------------------------------------------------------------------  
+22 PASS · 1 FAIL · 0 ERROR   (23 checks)  
+Every FAIL goes in lab-report.md section 9 with what you decided about it.  
+A FAIL you report and explain costs you nothing. One you hide costs the criterion.  
 $ python tests/validate_submission.py  
- (paste)  
+ submission.yml — submission.yml  
+------------------------------------------------------------------------  
+PASS   schema                                    1  
+PASS   week                                      03  
+PASS   student.name                              Shynbulat Kazbek  
+PASS   student.student_id                        24B032123  
+PASS   student.github                            Kazbekio  
+PASS   assistant.tool                            ChatGPT  
+PASS   assistant.model                           GPT-5.6 Luna — Instant  
+PASS   counts.user_stories                       7  
+PASS   counts.acceptance_criteria_sets           3  
+PASS   checker                                   22 PASS · 1 FAIL · 0 ERROR  
+PASS   checker.commit                            bbb75db  
+PASS   assumptions.overlap_touching_bookings     not-allowed  
+PASS   assumptions.exactly_two_hours             allowed  
+PASS   traceability.use_cases_not_covered        []  
+PASS   traceability.stories_not_traced           US-03  
+PASS   review_findings                           3 findings  
+PASS   review_findings[1]                        US-05 initially included out-of-scope features (adding rooms…  
+PASS   review_findings[2]                        UC-06 Send confirmation had no story behind it at all until …  
+PASS   review_findings[3]                        AC-03 was added to explicitly test the boundary condition of…  
+PASS   honesty.can_explain_everything_submitted  yes  
+PASS   honesty.ai_usage_disclosed                yes  
+------------------------------------------------------------------------  
+21 PASS · 0 FAIL · 0 ERROR · 0 note  
+Shape is fine. This says nothing about whether the work is good.  
    
 | | | | |  
 |-|-|-|-|  
@@ -232,7 +282,7 @@ Commit these numbers were produced at (git rev-parse --short HEAD):
 **Did you run the checks by hand instead of with Python?**No, I used the provided Python scripts.  
    
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsSfYxZo/kSGMYQLPJrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA4qrBdGuSdJuAAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSPBCUbfEm6YmFDBhAU2QtIq6DIzW7UHAMBfnGt1V8fXEwAAXrse/w8F7pbTa1oAAAAASUVORK5CYII=)  
 **10. Conclusion (150–200 words)**  
 Answer all three:  
 1. Which part of the generated requirements was most wrong, and how would you have caught it withouta checker?  

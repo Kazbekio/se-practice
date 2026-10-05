@@ -1,0 +1,143 @@
+**Week 04 — Lab report: Modeling the System with UML**  
+*The single worksheet for this lab. Fill in every section. * ***Do not delete, rename or renumber***  
+ ***  
+ the headings*** * — the checker and the grader find your work by them. Replace every * *<...>*  
+ *  
+ placeholder; a row that still contains * *<...>* * counts as empty.*  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSPBCUbfEm6YmFDBhAU2QtIq6DIzW7UHAMBfnGt1V8fXEwAAXrse/w8F7pbTa1oAAAAASUVORK5CYII=)  
+**1. Setup**  
+| | |  
+|-|-|  
+| **Field** | **Value** |   
+| Name | Shynbulat Kazbek |   
+| Group | Monday 16:00-19:00 |   
+| AI assistant | ChatGPT |   
+| Exact model | GPT-5.5 Instant |   
+| Renderer | <PlantUML web server / VS Code extension / IntelliJ plugin / local jar> |   
+| Behaviour diagram | <sequence / activity / both> |   
+| Stories used | <my week-03 stories, revised / the reference set from README §3> |   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsad4FCtY9ecwnkms4E2ELcGWmTmrKwAA/uLeqrU6vp4AAPDa/gDzUgM9+S8z3AAAAABJRU5ErkJggg==)  
+**2. Prompts as sent**  
+Paste every prompt **exactly as you sent it**, in the order you sent it, one code block each. The  
+   
+ AI's first replies are saved as files in models/original/ — do not paste them here.  
+**2.1 Task 1 — use-case prompt**  
+Using the supplied scenario and approved stories, generate PlantUML for a use-case diagram. Include Student and Administrator outside a named system boundary. Model their goals, show justified associations, and list assumptions. Use include or extend only with a clear reason.  
+**2.2 Task 2 — class prompt**  
+Create a UML domain class diagram in PlantUML for Smart Campus. Start with Student, Room, and Booking. Add attributes, appropriate operations, and association multiplicities. Add other classes only when requirements justify them. Explain each relationship and list assumptions. Avoid unjustified inheritance or composition.  
+   
+**2.3 Task 3 — behaviour prompt (3A sequence or 3B activity)**  
+<paste>  
+   
+**2.4 Focused correction prompts (if you sent any)**  
+<paste, or write "none">  
+   
+**2.5 Critique prompt**  
+<paste>  
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCUpfD6ZYGZDAgAU2QtIq6DIzW7UHAMBfHGt1V+fXEwAAXrseHCoGAe/SKtAAAAAASUVORK5CYII=)  
+**3. Task 1 — use-case review**  
+**Assumptions the AI listed:** The AI listed 8 assumptions covering actor permissions, R1-R4 rule enforcement, confirmation outcomes, and a note on scope limits (no screens/databases).  
+   
+| # | Element | Problem | Rule or story | Fix |  
+| --- | --- | --- | --- | --- |  
+| 1 | `Student --> Receive confirmation` | The actor is directly linked to a system confirmation. A confirmation is an outcome, not a goal a user sets out to do. | R4 / US-07 | Removed the direct association between Student and the confirmation use case. |  
+| 2 | `<<include>>` relationships | The include arrows for the confirmation use case are missing the mandatory justification comment above them. | PlantUML conventions (README §4) | Added `' why:` comments directly above the `<<include>>` lines citing R4. |  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhwgJWEPcbJpnRgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseaIkEMIPgIvAAAAAASUVORK5CYII=)  
+**4. Task 2 — class diagram review**  
+### 4.1 Relationships, read both ways  
+   
+One row per association in your **revised** class diagram.  
+   
+| Association | Read left → right | Read right → left | Multiplicities |  
+| --- | --- | --- | --- |  
+| Student — Booking | One Student makes 0..* bookings | Each Booking belongs to exactly 1 Student | 1 / 0..* |  
+| Room — Booking | One Room is reserved in 0..* bookings | Each Booking is for exactly 1 Room | 1 / 0..* |  
+   
+### 4.2 Constraints the multiplicities cannot show  
+   
+- R2: Active bookings cannot overlap. Displayed as a note directly on the Booking class because multiplicity (0..*) only says "many", not "when".  
+- R1 (future start, exactly 2 hours) and R3 (blocked room) cannot be shown via multiplicities. They are implied by attributes (`startTime`, `isBlocked`) and enforced by business logic.  
+   
+### 4.3 Assumptions  
+   
+- A1: overlap_touching_bookings = not-allowed (a booking ending exactly when another begins is considered an overlap under R2).  
+- A2: blocking_a_booked_room = keep-bookings (blocking a room stops new bookings under R3, but existing active bookings remain).  
+   
+### 4.4 Findings  
+   
+| # | Element | Problem | Rule or story | Fix |  
+| --- | --- | --- | --- | --- |  
+| 1 | R2 constraint | R2 cannot be shown via multiplicities, but the AI just mentioned it in text, not on the diagram. | PlantUML conventions (README §4) | Added a `note right of Booking` stating R2. |  
+| 2 | Domain Class Operations | The AI added UI/system actions like `sendConfirmation()` and `viewAvailableRooms()` as methods on domain entities. | Domain modeling principles | Removed methods to keep it a pure domain model focused on state (attributes) for R1-R3. |  
+   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsScYxpg/i2XMYARvRrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA22YBcnkstSpAAAAAElFTkSuQmCC)  
+**5. Task 3 — behaviour diagram review**  
+**Option chosen and why:** <3A sequence / 3B activity — one sentence on why>  
+**Design components added beyond the domain model:** <name each one, e.g. BookingService —  
+   
+ what it does in one line; write "none" for an activity diagram>  
+| | | | | |  
+|-|-|-|-|-|  
+| **#** | **Element** | **Problem** | **Rule or story** | **Fix** |   
+| 1 |   |   |   |   |   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSPBCUZfE2IYmVDBhAU2QtIq6DIzW7UHAMBfnGt1V8fXEwAAXrse/xcF7U7sx4wAAAAASUVORK5CYII=)  
+**6. AI critique**  
+Run the critique prompt once, on all your revised diagrams together. At least **three** rows. A  
+   
+ critique is another claim to evaluate, not a verdict: reject what is wrong and say why.  
+| | | | | |  
+|-|-|-|-|-|  
+| **#** | **Issue the AI raised** | **Element it cited** | **Verdict** | **Why** |   
+| 1 |   |   | <accept / reject> |   |   
+| 2 |   |   | <accept / reject> |   |   
+| 3 |   |   | <accept / reject> |   |   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsad4EjtY9fewnUms4E2ELcGWmTmrKwAA/uLeqrU6vp4AAPDa/gDzWAM6QQXRdAAAAABJRU5ErkJggg==)  
+**7. Consistency table**  
+One row for each of **R1–R4**, then one row for  **every use case in your revised use-case**  
+ **  
+ diagram**, spelled exactly as in the diagram, with the story ID it traces to.  
+| | | | |  
+|-|-|-|-|  
+| **Requirement / story** | **Use case** | **Classes** | **Behaviour element** |   
+| R1 |   |   | <message, guard or decision> |   
+| R2 |   | <classes, note> | <message, guard or decision> |   
+| R3 |   |   | <message, guard or decision> |   
+| R4 |   |   |   |   
+|   |   | <Student, Booking, Room> |   |   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQ2AQBAAsSHhiQI0IWp9ngBsYIEfIWkVdJuZs5oAAPiLe6+O6vp6AgDAa+sBhYwEOqBD7p8AAAAASUVORK5CYII=)  
+**8. Change log**  
+At least **three** rows, and at least one for each required diagram (use case, class, your  
+   
+ behaviour diagram). "Before" is what the AI produced; "After" is what you submitted.  
+| | | | | |  
+|-|-|-|-|-|  
+| **#** | **Diagram** | **Before (AI's original)** | **After (your revision)** | **Reason** |   
+| 1 |   |   |   | <rule, story or notation reason> |   
+| 2 |   |   |   |   |   
+| 3 | <sequence / activity> |   |   |   |   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSdYxZ4/mJjEsxE8W8GbCFuCLTOzVXsAAPzFuVZ3dXw9AQDgtesBxPEF3bv7x0IAAAAASUVORK5CYII=)  
+**9. Checker output**  
+Paste the complete output of python tests/check_models.py, then explain **every FAIL you are**  
+ **  
+ keeping**. The same IDs go in submission.yml under checker.kept_fails. A FAIL you report and explain costs you nothing. One you hide costs the whole criterion.  
+<paste the full output>  
+   
+**FAILs I am keeping, and why:** <one line per check ID, or "none">  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsSdYxKa/i8WMIR7ECt5E2BJsmZmt2gMA4C+Otbqr8+sJAACvXQ85PAYartXEogAAAABJRU5ErkJggg==)  
+**10. Conclusion (120–180 words)**  
+<Which diagram did the AI get most wrong, and what exactly was wrong? Which error would have  
+   
+ reached the code if nobody had reviewed it? What did the critique find that you missed — and what  
+   
+ did it claim that was false? Be specific: "the AI got the multiplicities wrong" is worth nothing;  
+   
+ "the AI put 1..* on the Booking end, which says every room must already have a booking" is worth  
+   
+ everything.>  

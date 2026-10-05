@@ -28,15 +28,14 @@ Using the supplied scenario and approved stories, generate PlantUML for a use-ca
 Create a UML domain class diagram in PlantUML for Smart Campus. Start with Student, Room, and Booking. Add attributes, appropriate operations, and association multiplicities. Add other classes only when requirements justify them. Explain each relationship and list assumptions. Avoid unjustified inheritance or composition.  
    
 **2.3 Task 3 — behaviour prompt (3A sequence or 3B activity)**  
-<paste>  
-   
+Generate PlantUML for Book room. Use Student, BookingService, and BookingRepository lifelines. Validate the supplied rules, then attempt the reservation. Show a successful confirmation and an unavailable-room alternative using alt. Label messages and replies. Explain new design components and all assumptions.  
 **2.4 Focused correction prompts (if you sent any)**  
 <paste, or write "none">  
    
 **2.5 Critique prompt**  
 <paste>  
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCUpfD6ZYGZDAgAU2QtIq6DIzW7UHAMBfHGt1V+fXEwAAXrseHCoGAe/SKtAAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OUQmAABBAsSdYxKbXxlpGEAOIFfwTYUuwZWa2ag8AgL841uquzq8nAAC8dj05VAYO3phhoQAAAABJRU5ErkJggg==)  
 **3. Task 1 — use-case review**  
 **Assumptions the AI listed:** The AI listed 8 assumptions covering actor permissions, R1-R4 rule enforcement, confirmation outcomes, and a note on scope limits (no screens/databases).  
    
@@ -44,7 +43,7 @@ Create a UML domain class diagram in PlantUML for Smart Campus. Start with Stude
 | --- | --- | --- | --- | --- |  
 | 1 | `Student --> Receive confirmation` | The actor is directly linked to a system confirmation. A confirmation is an outcome, not a goal a user sets out to do. | R4 / US-07 | Removed the direct association between Student and the confirmation use case. |  
 | 2 | `<<include>>` relationships | The include arrows for the confirmation use case are missing the mandatory justification comment above them. | PlantUML conventions (README §4) | Added `' why:` comments directly above the `<<include>>` lines citing R4. |  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhwgJWEPcbJpnRgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseaIkEMIPgIvAAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OMQ2AABAAsSNhRAF6EPYDLhGADSywEZJWQZeZ2aszAAD+4l6rrTq+ngAA8Nr1AIWsBDYDm5cLAAAAAElFTkSuQmCC)  
 **4. Task 2 — class diagram review**  
 ### 4.1 Relationships, read both ways  
    
@@ -73,18 +72,21 @@ One row per association in your **revised** class diagram.
 | 2 | Domain Class Operations | The AI added UI/system actions like `sendConfirmation()` and `viewAvailableRooms()` as methods on domain entities. | Domain modeling principles | Removed methods to keep it a pure domain model focused on state (attributes) for R1-R3. |  
    
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsScYxpg/i2XMYARvRrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA22YBcnkstSpAAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OYQ1AABSAwc8mi5wvkwZyCKCAACr4Z7a7BLfMzFYdAQDwF+da3dX+9QQAgNeuB6feBdUJcyS2AAAAAElFTkSuQmCC)  
 **5. Task 3 — behaviour diagram review**  
-**Option chosen and why:** <3A sequence / 3B activity — one sentence on why>  
-**Design components added beyond the domain model:** <name each one, e.g. BookingService —  
+**Option chosen and why:** 3A sequence — it clearly shows the interactions between the actor and the design components over time, which makes validation flow easier to trace.  
    
- what it does in one line; write "none" for an activity diagram>  
-| | | | | |  
-|-|-|-|-|-|  
-| **#** | **Element** | **Problem** | **Rule or story** | **Fix** |   
-| 1 |   |   |   |   |   
+**Design components added beyond the domain model:**  
+- `BookingService`: A service layer component that coordinates the booking process and executes business rule validations (R1, R2, R3).  
+- `BookingRepository`: A data access component responsible for fetching room state and persisting new bookings to the database.  
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSPBCUZfE2IYmVDBhAU2QtIq6DIzW7UHAMBfnGt1V8fXEwAAXrse/xcF7U7sx4wAAAAASUVORK5CYII=)  
+| # | Element | Problem | Rule or story | Fix |  
+| --- | --- | --- | --- | --- |  
+| 1 | `alt Room is available` followed by `validate R2 / R3` | The AI asks the DB if the room is available, and if yes, *then* it checks if it's blocked (R3) or has overlaps (R2). This is logically backward, as R2 and R3 define availability. | Logical Flow / R2, R3 | Changed the flow: the Service now fetches raw room data from the Repository, evaluates R2 and R3 itself, and then branches (`alt valid` vs `else invalid`). |  
+| 2 | `checkRoomAvailability` message | The repository was doing the validation work instead of the service layer. | Domain Logic | Replaced with `getRoomAndActiveBookings(roomId)` so the Service handles the business rules. |  
+   
+   
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhwgJOUPcjIpnRgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseaJEEL8XMiYMAAAAASUVORK5CYII=)  
 **6. AI critique**  
 Run the critique prompt once, on all your revised diagrams together. At least **three** rows. A  
    
@@ -96,7 +98,7 @@ Run the critique prompt once, on all your revised diagrams together. At least **
 | 2 |   |   | <accept / reject> |   |   
 | 3 |   |   | <accept / reject> |   |   
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsad4EjtY9fewnUms4E2ELcGWmTmrKwAA/uLeqrU6vp4AAPDa/gDzWAM6QQXRdAAAAABJRU5ErkJggg==)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsScYxpg/jFnsYARvRrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA22QBcposvV4AAAAAElFTkSuQmCC)  
 **7. Consistency table**  
 One row for each of **R1–R4**, then one row for  **every use case in your revised use-case**  
  **  
@@ -110,7 +112,7 @@ One row for each of **R1–R4**, then one row for  **every use case in your revi
 | R4 |   |   |   |   
 |   |   | <Student, Booking, Room> |   |   
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQ2AQBAAsSHhiQI0IWp9ngBsYIEfIWkVdJuZs5oAAPiLe6+O6vp6AgDAa+sBhYwEOqBD7p8AAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCUpfEJ5YGBDBgAU2QtIq6DIzW7UHAMBfHGt1V+fXEwAAXrseHDYF+yOk59sAAAAASUVORK5CYII=)  
 **8. Change log**  
 At least **three** rows, and at least one for each required diagram (use case, class, your  
    
@@ -122,7 +124,7 @@ At least **three** rows, and at least one for each required diagram (use case, c
 | 2 |   |   |   |   |   
 | 3 | <sequence / activity> |   |   |   |   
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSdYxZ4/mJjEsxE8W8GbCFuCLTOzVXsAAPzFuVZ3dXw9AQDgtesBxPEF3bv7x0IAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AUBBAsUfyVTCg9UygEBVsWGAjJK2CbjNzVGcAAPzFtapV7V9PAAB47X4AEWIEM8iQs0EAAAAASUVORK5CYII=)  
 **9. Checker output**  
 Paste the complete output of python tests/check_models.py, then explain **every FAIL you are**  
  **  
@@ -130,7 +132,7 @@ Paste the complete output of python tests/check_models.py, then explain **every 
 <paste the full output>  
    
 **FAILs I am keeping, and why:** <one line per check ID, or "none">  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsSdYxKa/i8WMIR7ECt5E2BJsmZmt2gMA4C+Otbqr8+sJAACvXQ85PAYartXEogAAAABJRU5ErkJggg==)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSd49m4v6wg/pwmMYQVvImwJtszMXp0BAPAX91pt1fH1BACA164Hoq8EQMMPmF8AAAAASUVORK5CYII=)  
 **10. Conclusion (120–180 words)**  
 <Which diagram did the AI get most wrong, and what exactly was wrong? Which error would have  
    

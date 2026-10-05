@@ -88,43 +88,37 @@ One row per association in your **revised** class diagram.
    
 ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhwgJOUPcjIpnRgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseaJEEL8XMiYMAAAAASUVORK5CYII=)  
 **6. AI critique**  
-Run the critique prompt once, on all your revised diagrams together. At least **three** rows. A  
+| # | Issue the AI raised | Element it cited | Verdict | Why |   
+| --- | --- | --- | --- | --- |   
+| 1 | R1 is missing from the class diagram and needs a note. | `Booking` class | Reject | R1 is a behavioral validation rule (time range). It is properly enforced by the `BookingService` in the sequence diagram. Adding it as a static note clutters the domain model, and the instructions only mandated a note for R2. |   
+| 2 | `hide methods` is wrong; domain classes should have operations like `cancelBooking()`. | Class diagram (`hide methods`) | Reject | We are using an anemic domain model focused purely on state (attributes). The operations are delegated to design components like `BookingService`, as shown in the sequence diagram. |   
+| 3 | The sequence diagram uses `else invalid`, but the prompt specifically asked for an "unavailable-room" alternative. | Sequence diagram `alt valid / else invalid` | Accept | The task prompt specifically requested an "unavailable-room alternative". I changed the branch guard from `else invalid` to `else unavailable` to accurately reflect the prompt and requirements. |   
    
- critique is another claim to evaluate, not a verdict: reject what is wrong and say why.  
-| | | | | |  
-|-|-|-|-|-|  
-| **#** | **Issue the AI raised** | **Element it cited** | **Verdict** | **Why** |   
-| 1 |   |   | <accept / reject> |   |   
-| 2 |   |   | <accept / reject> |   |   
-| 3 |   |   | <accept / reject> |   |   
-   
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsScYxpg/jFnsYARvRrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA22QBcposvV4AAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCkJfE1pYGfHAiAU2QtIq6DIzW7UHAMBfnGt1V8fXEwAAXrse4dwF6o2O55YAAAAASUVORK5CYII=)  
 **7. Consistency table**  
-One row for each of **R1–R4**, then one row for  **every use case in your revised use-case**  
- **  
- diagram**, spelled exactly as in the diagram, with the story ID it traces to.  
-| | | | |  
-|-|-|-|-|  
-| **Requirement / story** | **Use case** | **Classes** | **Behaviour element** |   
-| R1 |   |   | <message, guard or decision> |   
-| R2 |   | <classes, note> | <message, guard or decision> |   
-| R3 |   |   | <message, guard or decision> |   
-| R4 |   |   |   |   
-|   |   | <Student, Booking, Room> |   |   
+| Requirement / story | Use case | Classes | Behaviour element |   
+| --- | --- | --- | --- |   
+| R1 | Book room | Booking (startTime, endTime) | `validate time range (R1)` |   
+| R2 | Book room, Cancel booking | Booking, note | `check for overlapping bookings (R2)` |  
+| R3 | Book room, Block or unblock room | Room (isBlocked) | `check if room is blocked (R3)` |   
+| R4 | Book room, Send confirmation | Booking (status) | `confirm booking (R4)` |   
+| US-01 | View availability | Room, Booking | none |   
+| US-02 | Book room | Student, Room, Booking | `bookRoom(...)`, `saveBooking(...)` |   
+| US-03 | View my bookings | Student, Booking | none |   
+| US-04 | Cancel booking | Student, Booking | none |   
+| US-05 | Block or unblock room | Administrator, Room | none |   
+| US-06 | Review usage | Administrator, Room, Booking | none |   
+| US-07 | Send confirmation | Booking | `confirm booking (R4)` |  
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCUpfEJ5YGBDBgAU2QtIq6DIzW7UHAMBfHGt1V+fXEwAAXrseHDYF+yOk59sAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhZscZXlheJwqQgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseop8EQrmJduIAAAAASUVORK5CYII=)  
 **8. Change log**  
-At least **three** rows, and at least one for each required diagram (use case, class, your  
+| # | Diagram | Before (AI's original) | After (your revision) | Reason |   
+| --- | --- | --- | --- | --- |   
+| 1 | use case | Connected `Student` directly to `Send confirmation`. | Removed direct link, added `<<include>>` from booking/cancellation with a `' why:` comment. | R4 and US-07 state confirmation is an automated system outcome of an action, not an independent user goal. |   
+| 2 | class | Included UI/system operations like `viewAvailability()` and omitted the R2 constraint. | Removed operations to leave pure data state, added `note right of Booking` for R2. | Domain modeling principles dictate keeping UI out of domain classes. PlantUML conventions required R2 in a note. |   
+| 3 | sequence | Checked R2 and R3 *inside* the "Room is available" branch after querying the DB. | Moved R2 and R3 validation checks to the `BookingService` layer *before* deciding if the room is available. | Logical error: R2 (overlaps) and R3 (blocked) are the very business rules that define whether a room is "available" or not. |  
    
- behaviour diagram). "Before" is what the AI produced; "After" is what you submitted.  
-| | | | | |  
-|-|-|-|-|-|  
-| **#** | **Diagram** | **Before (AI's original)** | **After (your revision)** | **Reason** |   
-| 1 |   |   |   | <rule, story or notation reason> |   
-| 2 |   |   |   |   |   
-| 3 | <sequence / activity> |   |   |   |   
-   
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AUBBAsUfyVTCg9UygEBVsWGAjJK2CbjNzVGcAAPzFtapV7V9PAAB47X4AEWIEM8iQs0EAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNBCUrfDqrYGVDAgAU2QtIq6DIzW7UHAMBfHGt1V+fXEwAAXrseHCQGBEuErVgAAAAASUVORK5CYII=)  
 **9. Checker output**  
 Paste the complete output of python tests/check_models.py, then explain **every FAIL you are**  
  **  
@@ -132,7 +126,7 @@ Paste the complete output of python tests/check_models.py, then explain **every 
 <paste the full output>  
    
 **FAILs I am keeping, and why:** <one line per check ID, or "none">  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSd49m4v6wg/pwmMYQVvImwJtszMXp0BAPAX91pt1fH1BACA164Hoq8EQMMPmF8AAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsaeILbwZ9Fewo0Gs4E2ELcGWmTmqKwAA/uLeqr06v54AAPDa+gAthwNEfGhnhAAAAABJRU5ErkJggg==)  
 **10. Conclusion (120–180 words)**  
 <Which diagram did the AI get most wrong, and what exactly was wrong? Which error would have  
    

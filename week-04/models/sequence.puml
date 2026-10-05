@@ -17,7 +17,7 @@ alt valid
     BookingService -> BookingRepository : saveBooking(booking)
     BookingRepository --> BookingService : bookingSaved
     BookingService --> Student : confirm booking (R4)
-else invalid
+else unavailable
     BookingService --> Student : reject booking
 end
 @enduml

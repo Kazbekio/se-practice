@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+
+actor Student
+actor Administrator
+
+rectangle "Smart Campus Study Room Booking System" {
+
+    usecase "View available\nstudy rooms" as UC1
+    usecase "Book study room" as UC2
+    usecase "View my bookings" as UC3
+    usecase "Cancel booking" as UC4
+    usecase "Receive confirmation" as UC5
+
+    usecase "Block or unblock\nstudy room" as UC6
+    usecase "Review room usage" as UC7
+}
+
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+
+Administrator --> UC6
+Administrator --> UC7
+
+UC2 ..> UC5 : <<include>>
+UC4 ..> UC5 : <<include>>
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+
+actor Student
+actor Administrator
+
+rectangle "Smart Campus Study Room Booking System" {
+
+    usecase "View availability" as UC1
+    usecase "Book room" as UC2
+    usecase "View my bookings" as UC3
+    usecase "Cancel booking" as UC4
+    usecase "Send confirmation" as UC5
+
+    usecase "Block or unblock room" as UC6
+    usecase "Review usage" as UC7
+}
+
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+
+Administrator --> UC6
+Administrator --> UC7
+
+' why: R4 requires confirmation on successful booking (US-07)
+UC2 ..> UC5 : <<include>>
+' why: R4/US-07 applies to cancellation confirmation as well
+UC4 ..> UC5 : <<include>>
+
+@enduml

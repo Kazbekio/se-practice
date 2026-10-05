@@ -1,0 +1,42 @@
+schema: 1
+week: "04"
+
+student:
+  name: Shynbulat Kazbek
+  student_id: 24B032123
+  github: Kazbekio
+
+assistant:
+  tool: ChatGPT
+  model: GPT-5.6 Luna - Instant
+
+counts:
+  behaviour_diagram: sequence
+  stories_source: week-03
+  use_cases: 7
+  change_log_rows: 3
+
+checker:
+  pass: 37
+  fail: 0
+  error: 0
+  commit: 6a89b53
+  kept_fails: []
+
+assumptions:
+  overlap_touching_bookings: not-allowed
+  blocking_a_booked_room: keep-bookings
+
+traceability:
+  use_cases_not_traced: []
+  rules_not_shown: []
+
+review_findings:
+  - "Student --> Receive confirmation was a direct link; removed it because confirmation is an outcome, not an explicit actor goal."
+  - "The AI put sendConfirmation() and viewAvailableRooms() operations on the Student and Booking classes; removed them and added a note for R2 on Booking so the class diagram stays focused on state."
+  - "In the sequence diagram, the AI validated R2 and R3 after querying availability, which is a logical error since R2 and R3 define availability."
+
+honesty:
+  originals_unedited: yes
+  can_explain_everything_submitted: yes
+  ai_usage_disclosed: yes

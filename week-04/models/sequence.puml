@@ -1,0 +1,23 @@
+@startuml
+actor Student
+participant BookingService
+participant BookingRepository
+
+Student -> BookingService : bookRoom(roomId, startTime, endTime)
+
+BookingService -> BookingService : validate time range (R1)
+
+BookingService -> BookingRepository : getRoomAndActiveBookings(roomId)
+BookingRepository --> BookingService : roomData, activeBookings
+
+BookingService -> BookingService : check if room is blocked (R3)
+BookingService -> BookingService : check for overlapping bookings (R2)
+
+alt valid
+    BookingService -> BookingRepository : saveBooking(booking)
+    BookingRepository --> BookingService : bookingSaved
+    BookingService --> Student : confirm booking (R4)
+else unavailable
+    BookingService --> Student : reject booking
+end
+@enduml

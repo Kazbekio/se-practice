@@ -93,22 +93,25 @@ Important: Test each acceptance criterion independently, then test combinations�
 ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSeYxKS/kJkED6bwYAVvImwJtszMVu0BAPAXx1rd1fn1BACA164HHDwF+DpPyKwAAAAASUVORK5CYII=)  
 **4. Task 3 — my tests**  
 Base input for every row unless the row says otherwise: now=540, blocked=False, existing=[(600, 660)].  
-| | | | | | | | |  
-|-|-|-|-|-|-|-|-|  
-| **#** | **Test name** | **Request (start, end)** | **What differs from the base input** | **Expected** | **AC** | **Result on v1** | **Result on final** |   
-| 1 |   |   |   |   |   |   |   |   
-| 2 |   |   |   |   |   |   |   |   
-| 3 |   |   |   |   |   |   |   |   
-| 4 |   |   |   |   |   |   |   |   
-| 5 |   |   |   |   |   |   |   |   
-| 6 |   |   |   |   |   |   |   |   
-| 7 |   |   |   |   |   |   |   |   
-| 8 |   |   |   |   |   |   |   |   
-| 9 |   |   |   |   |   |   |   |   
-| 10 |   |   |   |   |   |   |   |   
-| 11 |   |   |   |   |   |   |   |   
+| # | Test name | Request (start, end) | What differs from the base input | Expected | AC | Result on v1 | Result on final |  
+| --- | --- | --- | --- | --- | --- | --- | --- |  
+| 1 | test_touching_end_is_allowed | (660, 720) | none | True | AC4 | pass | pass |  
+| 2 | test_overlap_rejected | (630, 690) | none | False | AC4 | pass | pass |  
+| 3 | test_blocked_room_rejected | (660, 720) | blocked=True | False | AC3 | pass | pass |  
+| 4 | test_exactly_two_hours_allowed | (720, 840) | none | True | AC2 | pass | pass |  
+| 5 | test_over_two_hours_rejected | (720, 841) | none | False | AC2 | pass | pass |  
+| 6 | test_starts_now_rejected | (540, 570) | none | False | AC1 | pass | pass |  
+| 7 | test_zero_length_rejected | (700, 700) | none | False | AC1 | pass | pass |  
+| 8 | test_reversed_times_rejected | (720, 700) | none | False | AC1 | pass | pass |  
+| 9 | test_day_bound_midnight_allowed | (1380, 1440) | none | True | AC1 | pass | pass |  
+| 10 | test_day_bound_exceeds_midnight_rejected | (1380, 1441) | none | False | AC1 | pass | pass |  
+| 11 | test_empty_existing_allowed | (600, 660) | existing=[] | True | AC4 | pass | pass |  
+| 12 | test_multiple_existing_overlap_rejected | (700, 760) | existing=[(600, 660), (740, 800)] | False | AC4 | pass | pass |  
+| 13 | test_contains_existing_rejected | (570, 690) | none | False | AC4 | pass | pass |  
+| 14 | test_inside_existing_rejected | (615, 645) | none | False | AC4 | pass | pass |  
+| 15 | test_input_unchanged | (660, 720) | checks list mutation | True | AC5 | pass | pass |  
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhwgJmkPYLLpnRgQU2QtIq6DIze3UGAMBf3Gu1VcfHEQAA3rseaHkEMn1wK7sAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OMQ2AABAAsSPBCj5fFgpQwYwEZiywEZJWQZeZ2ao9AAD+4lyruzq+ngAA8Nr1AMTRBeEgNK9YAAAAAElFTkSuQmCC)  
 **5. Task 4 — debugging with evidence**  
 One row per defect you found — in v1, in a later version, or in your own tests. If v1 passed  
    
@@ -121,7 +124,7 @@ One row per defect you found — in v1, in a later version, or in your own tests
 | 1 |   |   |   |   |   |   |   
    
 **The debug prompt I sent, and the assistant's answer** (leave the block empty if you did not use it):  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsSfYxZo/kC1sYQLPJrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA4qzBdC53Vr8AAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAALUlEQVR4nO3OQQ0AIAwEsAMlSJ0UrOFkGngRklZBR1WtJDsAAPzizNcDAADuNcKwAyU+nb+5AAAAAElFTkSuQmCC)  
 **6. Task 5 — the critique**  
 **The assistant's critique, pasted unedited:**  
 (paste here)  
@@ -132,14 +135,14 @@ One row per defect you found — in v1, in a later version, or in your own tests
 | 1 |   | accept / reject |   |   |   
 | 2 |   | accept / reject |   |   |   
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSeYxKS/kJkED6bwYAVvImwJtszMVu0BAPAXx1rd1fn1BACA164HHDwF+DpPyKwAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AABAAsSNhQAQ60PcrIhnxgQU2QtIq6DIze3UGAMBf3Gu1VcfXEwAAXrseS14EKxPCORkAAAAASUVORK5CYII=)  
 **7. Change log — v1 to final**  
 | | | | |  
 |-|-|-|-|  
 | **#** | **What changed (the line, before → after)** | **Why** | **Evidence: the test or check that moved** |   
 | 1 |   |   |   |   
    
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAM0lEQVR4nO3OMQ0AIAwAwZIgBKm1gjSMNCwYYCIkd9OP3zJzRMQMAAB+sfqJeroBAMCN2pTWBSSZVtjzAAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OQQmAABRAsSd49m4tA8nPaQJjWMGbCFuCLTOzV2cAAPzFvVZbdXw9AQDgtesBorcEPwOKyvQAAAAASUVORK5CYII=)  
 **8. Evidence — real output**  
 **8.1 My suite, final run**  
 Paste the **complete** terminal output. For Python: everything python -m unittest -v printed.  
@@ -161,7 +164,7 @@ Break your own function on purpose, one line at a time, run your suite, restore 
 | 3 |   |   |   |   
    
 The three failing runs (Path A students leave this block empty):  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsSeYxZw/lVeDGMACBrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA6fOBdd+dKAKAAAAAElFTkSuQmCC)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANElEQVR4nO3OQQmAABRAsad4EjtY9fewnUms4E2ELcGWmTmrKwAA/uLeqrU6vp4AAPDa/gDzWAM6QQXRdAAAAABJRU5ErkJggg==)  
 **9. What still fails, and what the contract does not say**  
 **9.1 Checks I am keeping as FAIL or ERROR**  
 The same IDs as known_fails in submission.yml. Write none if the run is clean.  
@@ -178,5 +181,5 @@ The contract says times are integers. It does not say what can_book does when on
 One of the bounds written in AC1 can never be the *only* reason a request is rejected. Which one,  
    
  and why?  
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANUlEQVR4nO3OMQ2AUBBAsUfyVTCg9UygEBVsWGAjJK2CbjNzVGcAAPzFtapV7V9PAAB47X4AEWIEM8iQs0EAAAAASUVORK5CYII=)  
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnEAAAACCAYAAAA3pIp+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAANklEQVR4nO3OQQmAABRAsSfYxZo/jzlMYQLPJrCCNxG2BFtmZquOAAD4i3Ot7mr/egIAwGvXA4q7Bc870TqdAAAAAElFTkSuQmCC)  
 **10. Conclusion (120–180 words)**  

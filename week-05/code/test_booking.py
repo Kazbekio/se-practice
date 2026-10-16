@@ -65,3 +65,17 @@ class BookingTests(unittest.TestCase):
         can_book(610, 650, 540, False, existing)
         # Проверяем, что исходный неотсортированный список остался ровно таким же
         self.assertEqual(existing, [(900, 960), (600, 660)])
+    def test_touching_start_is_allowed(self):
+        # Касание с другой стороны (новая граница для §5)
+        self.assertEqual(can_book(570, 600, 540, False, [(600, 660)]), True)
+
+    def test_input_unchanged_when_rejected(self):
+        # Ловим M10: мутация при отказе
+        existing = [(600, 660)]
+        can_book(610, 650, 540, False, existing)
+        self.assertEqual(existing, [(600, 660)])
+    def test_input_unchanged_unsorted(self):
+        # Ловим M10: мутант сортирует список внутри функции
+        existing = [(900, 960), (600, 660)]
+        can_book(780, 840, 540, False, existing)
+        self.assertEqual(existing, [(900, 960), (600, 660)])

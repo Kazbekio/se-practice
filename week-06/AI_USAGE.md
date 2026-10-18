@@ -7,7 +7,7 @@ including anything an AI tool produced.
 | Tool | Exact model / plan | Used for | Which files it touched |
 | --- | --- | --- | --- |
 | Bolt.new | GLM 5.3 Flash: free this weekend | Generated v1 and applied four focused cleanup prompts | `original/project/`, `prototype/project/` |
-| Copilot SDK in VS Code | gpt-6-luna (session model label) | Inspected criteria and code, drafted prompts, ran browser tests, and prepared report/declaration text | `lab-report.md`, `submission.yml`, `evidence/*.png` |
+| Copilot SDK in VS Code | gpt-6-luna (session model label) | Inspected criteria and code, drafted prompts, ran browser tests, and prepared report/declaration text | `lab-report.md`, `AI_USAGE.md`, `submission.yml`, `evidence/*.png` |
 | | | | |
 
 **I used another assistant as well (to explain code, to draft text in lab-report.md, …):** yes

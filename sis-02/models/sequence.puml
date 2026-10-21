@@ -1,3 +1,74 @@
-' SIS #02 — your FINAL sequence diagram goes here, as PlantUML (@startuml … @enduml).
-' Start from the AI's original in models/original/sequence.puml, apply your accepted review
-' decisions, then render it to models/img/sequence.png (or .svg). README section 5.
+@startuml
+title Course Registration - Sequence Diagram
+autonumber
+
+actor Student
+boundary "Catalog UI" as UI
+control "Catalog Service" as CS
+control "Registration Service" as RS
+database "Course Offering Store" as OS
+database "Enrollment Store" as ES
+participant "Atomic Registration Operation" as TX
+
+== Browse Catalog ==
+
+Student -> UI: selectSemester(semester)
+UI -> CS: getCatalog(semester)
+CS -> OS: findOfferings(semester)
+OS --> CS: offerings
+
+loop For each offering
+    CS -> ES: countByOffering(offering)
+    ES --> CS: enrollmentCount
+    note right of CS
+      availablePlaces =
+      capacity - enrollmentCount
+    end note
+end
+
+CS --> UI: catalog with course code,\ntitle, offering, and available places
+UI --> Student: display catalog
+
+== Request Registration ==
+
+Student -> UI: register(offering)
+UI -> RS: register(student, offering)
+RS -> TX: registerAtomically(student, offering)
+
+note right of TX
+  Execute strictly within a database transaction:
+  1. Lock the current capacity state for the offering.
+  2. Check for an existing enrollment.
+  3. Check current capacity.
+  4. Create exactly one Enrollment if valid.
+
+  Duplicate checking, capacity validation,
+  and enrollment creation must be atomic
+  and protected against concurrent requests.
+end note
+
+alt Already enrolled
+    TX --> RS: ALREADY_ENROLLED
+    RS --> UI: reject("already enrolled")
+    UI --> Student: show rejection
+else Offering is full
+    TX --> RS: COURSE_FULL
+    RS --> UI: reject("course full")
+    UI --> Student: show rejection
+else Not enrolled and place available
+    TX -> ES: persist one Enrollment
+    ES --> TX: enrollment created
+    TX --> RS: SUCCESS
+    RS --> UI: confirmation
+    UI --> Student: show confirmation
+end
+
+note over TX, ES
+  On rejection: no Enrollment is created
+  and enrollment count is unchanged.
+  On success: exactly one Enrollment
+  is created and availability decreases by one.
+  Success is returned only after transaction commit.
+end note
+
+@enduml

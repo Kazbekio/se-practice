@@ -1,8 +1,8 @@
 # Week 07 — Lab report
 
-**Name:**
-**Group:**
-**Date:**
+**Name:** Shynbulat Kazbek
+**Group:** Monday 16:00 - 19:00
+**Date:** 2026-11-06
 
 Fill in every section. **Do not delete, rename or renumber the headings.** The checker and the
 grader find your answers by them. You can add rows to any table, but never remove its header.
@@ -13,13 +13,13 @@ grader find your answers by them. You can add rows to any table, but never remov
 
 | | |
 | --- | --- |
-| Project I continue (`week-06` = my Week 06 Bolt project, `starter` = the provided starter) | |
-| Bolt project link (or `not shared`, and why) | |
-| Assistant that generated the tests (tool) | |
-| Exact model (with its version, or `not displayed`) | |
-| Where I ran the tests (Bolt terminal / my computer / Codespace) | |
-| Vitest version (the `RUN  v…` line of a run) | |
-| Test command | |
+| Project I continue (`week-06` = my Week 06 Bolt project, `starter` = the provided starter) | starter |
+| Bolt project link (or `not shared`, and why) | not shared, because I used the provided starter |
+| Assistant that generated the tests (tool) | OpenAI Codex |
+| Exact model (with its version, or `not displayed`) | GPT-5 Codex |
+| Where I ran the tests (Bolt terminal / my computer / Codespace) | my computer |
+| Vitest version (the `RUN  v…` line of a run) | 4.1.12 |
+| Test command | `npm test` |
 
 ---
 
@@ -29,15 +29,20 @@ grader find your answers by them. You can add rows to any table, but never remov
 
 | | |
 | --- | --- |
-| File and function (or "inside the page component") | |
-| Its inputs | |
-| What it returned | |
-| How the page used it | |
+| File and function (or "inside the page component") | `src/App.tsx`, inside the `check` function in the page component |
+| Its inputs | Converted start, end and current time, the blocked checkbox, and the selected room bookings |
+| What it returned | It did not return a value; it made the local boolean `ok` |
+| How the page used it | The page passed `ok` to `setResult` and showed Available or Unavailable |
 
 **What I changed to extract `canBook`.** Say which file it now lives in, what you moved, and why
 the behaviour did not change. Also say which file of the page now calls it. 40 words or more.
 
 <!-- Write below this line -->
+
+I created `src/booking.ts` and moved the interval, current-time, duration, blocked-room, and
+overlap checks into `canBook`. I kept the conditions and their order the same, so the decision did
+not change. `src/App.tsx` still converts the time fields to minutes, but now it imports and calls
+`canBook` before it displays Available or Unavailable.
 
 ---
 
@@ -49,23 +54,23 @@ for every test. **The Expected column comes from AC1–AC4, never from the code.
 
 | ID | Candidate / changed input | Expected | AC | Reason (in your words) |
 | --- | --- | --- | --- | --- |
-| T01 | 660–720 (touching after) | true | AC4 | |
-| T02 | 540–570 (starts now) | false | AC1 | |
-| T03 | 720–720 (zero duration) | false | AC1 | |
-| T04 | 750–720 (reversed) | false | AC1 | |
-| T05 | 1380–1441 (past day end) | false | AC1 | |
-| T06 | 720–840 (120 minutes) | true | AC2 | |
-| T07 | 720–841 (121 minutes) | false | AC2 | |
-| T08 | 570–600 (touching before) | true | AC4 | |
-| T09 | 630–690 (partial overlap) | false | AC4 | |
-| T10 | 570–690 (contains booking) | false | AC4 | |
-| T11 | 615–645 (inside booking) | false | AC4 | |
-| T12 | 600–660 (identical interval) | false | AC4 | |
-| T13 | 660–720, blocked = true | false | AC3 | |
-| T14 | 630–690, bookings = [] | true | AC4 | |
-| AC5 | an Available request — the bookings after the call equal the bookings before | true, data unchanged | AC5 | |
-| X1 | | | | |
-| X2 | | | | |
+| T01 | 660–720 (touching after) | true | AC4 | The new interval starts when the old one ends, so they do not overlap. |
+| T02 | 540–570 (starts now) | false | AC1 | The start must be later than 540, not equal to it. |
+| T03 | 720–720 (zero duration) | false | AC1 | Start and end are equal, but AC1 requires start to be before end. |
+| T04 | 750–720 (reversed) | false | AC1 | The start is later than the end, so the interval is invalid. |
+| T05 | 1380–1441 (past day end) | false | AC1 | The end is one minute after 1440, outside the same day. |
+| T06 | 720–840 (120 minutes) | true | AC2 | The duration is exactly 120 minutes, and AC2 rejects only a longer booking. |
+| T07 | 720–841 (121 minutes) | false | AC2 | The duration is 121 minutes, which is over the limit. |
+| T08 | 570–600 (touching before) | true | AC4 | The request ends exactly when the old booking starts, so there is no overlap. |
+| T09 | 630–690 (partial overlap) | false | AC4 | The first 30 minutes are inside the existing 600–660 booking. |
+| T10 | 570–690 (contains booking) | false | AC4 | The request covers the complete existing booking. |
+| T11 | 615–645 (inside booking) | false | AC4 | The complete request is inside the existing booking. |
+| T12 | 600–660 (identical interval) | false | AC4 | The request has the same start and end as the existing booking. |
+| T13 | 660–720, blocked = true | false | AC3 | A blocked room must reject even a time interval that is otherwise valid. |
+| T14 | 630–690, bookings = [] | true | AC4 | With an empty booking list there is nothing to overlap. |
+| AC5 | an Available request — the bookings after the call equal the bookings before | true, data unchanged | AC5 | Checking availability must read the bookings but must not add, remove, or edit them. |
+| X1 | 1320–1440, bookings = [] (ends at day boundary) | true | AC1, AC2 | End 1440 is allowed, the start is after now, and the duration is exactly 120 minutes. |
+| X2 | 541–542, bookings = [] (one-minute request) | true | AC1 | A one-minute interval is after now and has start before end, so it is valid. |
 
 X1 and X2 are **your own two cases**: a boundary or a state that T01–T14 do not reach. Fill all
 five columns.

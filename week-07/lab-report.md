@@ -211,7 +211,10 @@ change and after restoring the correct code from section 7. Every test must pass
 is still open, leave its test failing and explain it in 9.1.
 
 ```text
-(paste here)
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+
+Test Files  1 passed (1)
+     Tests  17 passed (17)
 ```
 
 ---
@@ -224,18 +227,40 @@ error does not count as detection.
 
 | Trial | Intentional change | Detected / Survived | Failing test ID(s) | If it survived: why, and what you added |
 | --- | --- | --- | --- | --- |
-| M1 | Reject duration >= 120 instead of > 120 | Detected / Survived | | |
-| M2 | Treat touching endpoints as an overlap | Detected / Survived | | |
-| M3 | Remove the blocked-room rejection | Detected / Survived | | |
+| M1 | Reject duration >= 120 instead of > 120 | Detected | T06, X1 | Not applicable; both exact 120-minute cases failed. |
+| M2 | Treat touching endpoints as an overlap | Detected | T01, T08, AC5 | Not applicable; both endpoint directions failed. |
+| M3 | Remove the blocked-room rejection | Detected | T13 | Not applicable; the blocked-room test failed. |
 
 **The run of each mutant, pasted unedited.** Paste the `Tests` summary line and the failing test
 names at least:
 
 ```text
-(paste here)
+M1
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+❯ src/booking.test.ts (17 tests | 2 failed) 9ms
+    × T06 AC2: exactly 120 minutes is allowed 4ms
+    × X1 AC1 AC2: an interval may end exactly at 1440 0ms
+Test Files  1 failed (1)
+     Tests  2 failed | 15 passed (17)
+
+M2
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+❯ src/booking.test.ts (17 tests | 3 failed) 9ms
+    × T01 AC4: touching after is allowed 5ms
+    × T08 AC4: touching before is allowed 1ms
+    × AC5: an available check does not change existing bookings 0ms
+Test Files  1 failed (1)
+     Tests  3 failed | 14 passed (17)
+
+M3
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+❯ src/booking.test.ts (17 tests | 1 failed) 8ms
+    × T13 AC3: a blocked room is rejected 4ms
+Test Files  1 failed (1)
+     Tests  1 failed | 16 passed (17)
 ```
 
-All three changes reverted, and the full suite run again (section 6.3): yes / no
+All three changes reverted, and the full suite run again (section 6.3): yes
 
 ---
 
@@ -247,11 +272,11 @@ screenshot of each as `evidence/ui-1.png` … `evidence/ui-5.png`. Take **ui-4 a
 
 | # | Action | Expected observation | AC | What I observed | Pass / Fail / Not testable |
 | --- | --- | --- | --- | --- | --- |
-| U1 | Check 11:00–12:00, unblocked | Available, with the fixed sample booking | AC5 | | Pass / Fail / Not testable |
-| U2 | Enable blocked, then check again | Unavailable replaces the earlier result | AC3, AC5 | | Pass / Fail / Not testable |
-| U3 | Clear a required input and submit | Understandable validation feedback | AC6 | | Pass / Fail / Not testable |
-| U4 | Use a narrow (phone) width | Controls and result remain usable | AC6 | | Pass / Fail / Not testable |
-| U5 | Repeat the checks on the same data | Existing bookings remain unchanged | AC5 | | Pass / Fail / Not testable |
+| U1 | Check 11:00–12:00, unblocked | Available, with the fixed sample booking | AC5 | The green Available result appeared and 10:00–11:00 stayed in the list. | Pass |
+| U2 | Enable blocked, then check again | Unavailable replaces the earlier result | AC3, AC5 | The earlier result changed to the red Unavailable result. | Pass |
+| U3 | Clear a required input and submit | Understandable validation feedback | AC6 | The page said: “Fill in the current time, the start and the end.” | Pass |
+| U4 | Use a narrow (phone) width | Controls and result remain usable | AC6 | At 375 px, controls formed one readable column and the button and result worked. | Pass |
+| U5 | Repeat the checks on the same data | Existing bookings remain unchanged | AC5 | After two more checks, the list still showed only 10:00–11:00. | Pass |
 
 ---
 
@@ -263,17 +288,17 @@ Use the same IDs as `known_fails` in `submission.yml`. Write `none` if the run i
 
 | Check | Why it stays |
 | --- | --- |
-| | |
+| none | The final checker run has no FAIL or ERROR. |
 
 ### 9.2 Original and improved suites
 
 | Measure | First suite | Improved suite |
 | --- | --- | --- |
-| Executed / passed / failed | | |
-| Requirements with meaningful tests (AC IDs and gaps) | | |
-| Selected mutants detected | | |
-| Accepted / revised / rejected tests | | |
-| Remaining limitations | | |
+| Executed / passed / failed | 15 / 15 / 0 | 17 / 17 / 0 |
+| Requirements with meaningful tests (AC IDs and gaps) | AC1–AC4; AC5 checked only the decision, AC6 was outside the unit suite, and X1/X2 were missing. | AC1–AC5 plus X1/X2; AC6 was checked in the browser. |
+| Selected mutants detected | Not run on this copy; T06, T01/T08, and T13 suggest it could detect M1–M3. | 3/3 actually detected: M1, M2, and M3. |
+| Accepted / revised / rejected tests | The generated file was frozen before decisions. | 2 parts accepted, AC5 revised, and the omission of X1/X2 rejected. |
+| Remaining limitations | No data-preservation assertion and no two own boundaries. | Invalid existing bookings are not defined; unit tests do not prove every UI or accessibility detail. |
 
 ### 9.3 What no AC decides
 
@@ -281,7 +306,10 @@ Call your function with `bookings = [{ start: 700, end: 650 }]` (a reversed exis
 and a request of 660–720. What does it return? Does any AC say what it should return? (This is
 the value you declare in `submission.yml` under `assumptions.invalid_existing_booking`.)
 
--
+- With `bookings = [{ start: 700, end: 650 }]` and request 660–720, `canBook` returned `true`.
+  The overlap condition sees no overlap because 660 is not below 650. No AC says whether existing
+  data must first be validated. Returning false or throwing could also be a reasonable product
+  choice, but the current behavior is `returns-true`.
 
 ---
 
@@ -297,3 +325,16 @@ the value you declare in `submission.yml` under `assumptions.invalid_existing_bo
      pass, M1 would have become the real behaviour." -->
 
 <!-- Write your conclusion below this line -->
+
+The first suite had a green run, but it did not really test AC5 data preservation. Its AC5 test
+only checked that `canBook` returned true. A version that changed bookings and still returned true
+could pass. I found this by reading the assertion against AC5 before running it. The suite also
+omitted X1 and X2, including the 1440 boundary. I revised AC5 to copy and compare bookings and
+added both cases.
+
+The final 17-test green run proves the listed inputs follow AC1–AC5 and that the real function is
+imported. The mutant runs give stronger evidence: M1 failed T06 and X1, M2 failed the touching
+tests, and M3 failed T13. The green run does not prove the page layout or messages, so I checked
+them in the browser, including 375 px width. One limitation remains: no AC defines invalid existing
+bookings. The current function returns true for a reversed 700–650 booking, but another valid
+design could reject it or throw.

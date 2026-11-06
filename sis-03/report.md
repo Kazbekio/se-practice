@@ -125,18 +125,18 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | Case | Name | Input | Expected | Python v1 | Python final | Page v1 | Page final |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| T1 | Touching | 660–720 | Available | | | | |
-| T2 | Overlap | 630–690 | Unavailable | | | | |
-| T3 | Blocked | 660–720, blocked | Unavailable | | | | |
-| T4 | Exactly 120 min | 720–840 | Available | | | | |
-| T5 | 121 min | 720–841 | Unavailable | | | | |
-| T6 | Starts now | 540–570 | Unavailable | | | | |
-| T7 | Reversed | 720–660 | Unavailable | | | | |
-| T8 | Ends at midnight | 1380–1440 | Available | | | | |
-| T9 | Past midnight | 1380–1441 | Unavailable | | | | |
-| T10 | Second booking | 720–780, existing (600–660), (700–760) | Unavailable | | | | |
-| T11 | Same check twice | 660–720, twice | Available | | | | |
-| T12 | Narrow screen | T1 at ~375 px wide | Available | n/a | n/a | | |
+| T1 | Touching | 660–720 | Available | True | True | Not testable | Available |
+| T2 | Overlap | 630–690 | Unavailable | False | False | Not testable | Unavailable |
+| T3 | Blocked | 660–720, blocked | Unavailable | False | False | Not testable | Unavailable |
+| T4 | Exactly 120 min | 720–840 | Available | True | True | Not testable | Available |
+| T5 | 121 min | 720–841 | Unavailable | False | False | Not testable | Unavailable |
+| T6 | Starts now | 540–570 | Unavailable | False | False | Not testable | Unavailable |
+| T7 | Reversed | 720–660 | Unavailable | False | False | Not testable | Unavailable |
+| T8 | Ends at midnight | 1380–1440 | Available | True | True | Not testable | Not testable |
+| T9 | Past midnight | 1380–1441 | Unavailable | False | False | Not testable | Not testable |
+| T10 | Second booking | 720–780, existing (600–660), (700–760) | Unavailable | False | False | Not testable | Unavailable |
+| T11 | Same check twice | 660–720, twice | Available | True | True | Not testable | Available |
+| T12 | Narrow screen | T1 at ~375 px wide | Available | n/a | n/a | Not testable | Available |
 
 ## 6. Traceability
 
@@ -145,12 +145,12 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | AC | Implementation / file | Test input | Expected | v1 actual | Final actual |
 | --- | --- | --- | --- | --- | --- |
-| AC1 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| AC2 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| AC3 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| AC4 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| AC5 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| AC6 | (write here) | (write here) | (write here) | (write here) | (write here) |
+| AC1 | `code/booking.py` first condition; `web/final/src/lib/availability.ts` bounds/order checks | T6, T7, T8, T9 | T6/T7/T9 Unavailable; T8 Available | Python matched; page fixture not testable | Python matched; page T6/T7 matched, T8/T9 not expressible |
+| AC2 | `code/booking.py` duration condition; `checkAvailability` max-duration branch | T4, T5 | T4 Available; T5 Unavailable | Python matched; page fixture not testable | Both artifacts matched |
+| AC3 | `code/booking.py` blocked condition; `checkAvailability` blocked branch | T3 | Unavailable | Python False; page fixture not testable | Python False; page Unavailable |
+| AC4 | `code/booking.py` overlap condition; `intervalsOverlap`; final room fixtures | T1, T2, T10 | T1 Available; T2/T10 Unavailable | Python matched; page fixture not testable | Both artifacts matched |
+| AC5 | Pure returns in `booking.py`; copied room state and decision-only handler in `App.tsx` | T11 | Available twice with unchanged data | Python True; page fixture not testable | Python True; page Available twice |
+| AC6 | `DecisionPanel`, enabled Check control, `aria-live`, responsive grid in `App.tsx` | T7, T12 and empty-input check | Clear reason and usable 375 px result | Reversed/base fixture not testable; empty feedback unreachable | Clear reason; T12 Available; empty feedback visible |
 
 ## 7. Issue log
 
@@ -161,10 +161,12 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | # | Issue | Reproduction | Priority | Prompt / change | Retest result |
 | --- | --- | --- | --- | --- | --- |
-| 1 | (write here) | (write here) | (write here) | (write here) | (write here) |
-| 2 | (write here) | (write here) | (write here) | (write here) | (write here) |
+| 1 | v1 had no room with the required only booking 10:00–11:00, so the common fixture could not be selected. | Inspect every v1 room, then try T1/T2 (AC4); the exact base is absent. | High | Prompt: keep one standard room with only 600–660 and preserve blocked data. Change: final `src/data/rooms.ts` uses a shared base booking. | WebDriver T1 Available and T2 Unavailable. |
+| 2 | v1 disabled Check when a time was empty, making its existing validation message unreachable. | Leave both times empty (AC6); the v1 button is disabled, as captured in `before-1.png`. | Medium | Prompt: enable Check when a room is selected and expose the existing missing-time panel; keep availability logic unchanged. Change: button condition was narrowed and the result uses `aria-live`. | Empty-input click showed “Enter valid times first”; T12 still Available at 375 px. |
+| 3 | The reused final had no selectable room with the second interval 700–760, so T10 could not be executed on the page. | Select each reused-final room and try T10 (AC4); all rooms contained only 600–660. | High | Prompt: add 700–760 only to a separate fictional room, without changing the standard fixture. Change: Design Studio 2 now has both intervals. | WebDriver T10 showed Unavailable because of 11:40–12:40. |
+| 4 | v1 listed an unused Supabase client although backend and database are excluded. | For AC5 and the excluded scope, search imports and `package.json`; dependency existed but no application import used it. | Medium | Prompt: remove only the unused package and refresh the lockfile. Change reused from the Week 06 final and verified in this SIS. | Source scan found no Supabase, fetch, storage, login, or analytics use; build passed. |
 
-**Before / after:** `evidence/before-1.png` → `evidence/after-1.png` show issue (write here)
+**Before / after:** `evidence/before-1.png` → `evidence/after-1.png` show issue 2: disabled empty-input check versus visible validation feedback.
 
 ## 8. Critique decisions
 
@@ -174,9 +176,10 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | # | AI claim or recommendation | How I verified it | Decision | Reason (AC or case) |
 | --- | --- | --- | --- | --- |
-| 1 | (write here) | (write here) | (write here) | (write here) |
-| 2 | (write here) | (write here) | (write here) | (write here) |
-| 3 | (write here) | (write here) | (write here) | (write here) |
+| 1 | The Python bounds, duration, blocked, and overlap branches satisfy AC1–AC4. | Ran T1–T11 through both Python files and the 19-test suite. | accept | Every result matched the fixed expectations and the input list stayed unchanged (AC5). |
+| 2 | Strict overlap comparisons correctly allow endpoint contact. | T1 returned True in both Python files and the final page showed Available. | accept | AC4 says touching at 660 is not overlap. |
+| 3 | The page fully supports the complete AC1 day boundary, including an end value of 1440. | Tried the native time input and inspected `parseTime`; it accepts only hours 00–23. | modify | The internal logic supports 1440, but T8/T9 are Not testable in the UI. |
+| 4 | Disable Check until both time fields are valid to avoid an invalid submission. | v1 had this state; `before-1.png` and the disabled property showed that feedback could not be reached. | reject | AC6 needs understandable validation feedback, so final allows the click and explains missing input. |
 
 ## 9. Coding-agent analysis
 
@@ -186,12 +189,12 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | Step | What happened in this assignment |
 | --- | --- |
-| User goal | (write here) |
-| Model / plan | (write here) |
-| Tool call | (write here) |
-| Observation | (write here) |
-| Next step | (write here) |
-| Human review | (write here) |
+| User goal | Finish SIS 03, preserve reused v1 artifacts, test both systems, and prepare an open PR. |
+| Model / plan | Codex read the handout and templates, froze AC1–AC6, and planned separate baseline, v1, repair, test, and declaration commits. |
+| Tool call | It copied branch artifacts, built both Vite projects, started local servers, and drove Firefox through WebDriver. |
+| Observation | v1 lacked the fixed fixture and blocked empty validation; final WebDriver results matched T1–T7 and T10–T12, while T8/T9 were not expressible. |
+| Next step | It added only the second-booking fixture and live result announcement, rebuilt, reran the suite, and completed traceability. |
+| Human review | No independent owner review happened in this session. Codex checked diffs, screenshots, source scope, and test output; the owner still must be able to defend the work. |
 
 ### 9.2 Context, tools and permissions
 
@@ -200,15 +203,16 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 | Tool | Context it used | Tools or permissions | Observed or assumed |
 | --- | --- | --- | --- |
-| (write here) | (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) | (write here) |
+| ChatGPT (Week 05) | AC1–AC5 text and the requested Python signature | Produced a plan and code text; exact hidden runtime tools are unknown. | Assumed |
+| Bolt.new (Week 06) | Prompt, React template, and fictional room data | Generated the exported file tree and preview shown in reused evidence. | Observed |
+| Codex (this SIS) | PDF, repository history, templates, reused source, and terminal output | Read/write workspace, shell, portable Node, local HTTP, Firefox WebDriver; GitHub connector was read-only. | Observed |
+| GitHub connector | Repository metadata and branch search | Read access succeeded; branch and file writes returned HTTP 403. | Observed |
 
 ### 9.3 Checkpoint and dependability
 
-**Safety checkpoint:** (write here)
+**Safety checkpoint:** Before accepting generated changes, Codex compared the requested paths with `git status`, worked in a separate workspace clone to protect unrelated staged files, checked the AC wording, and reviewed the exact diff before each commit.
 
-**Reliability, security, responsibility:** (write here)
+**Reliability, security, responsibility:** Reliability came from fixed expected results, independent Python tests, and browser observations instead of visual confidence. Security came from keeping login, network calls, storage, analytics, backend, and database code out of scope. Tool permission failures were not bypassed. AI output can still be wrong, so final understanding, disclosure, submission, and defence remain the student owner's responsibility.
 
 ## 10. Reflection
 
@@ -218,7 +222,7 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
      recommendation you rejected or modified, and why; what you would improve next without
      expanding the scope. -->
 
-(write here)
+The Python task was easier to control because the function had a small contract and every branch could be tested directly. The page felt faster to create with vibe coding, but a finished look hid missing test data and unreachable feedback. A reliability risk was an incorrect overlap operator. A usability risk was a disabled button that gave no reason. A security risk was the unused database client, which could encourage an out-of-scope connection later. Review, permissions, and tests still need a responsible person because an AI can produce convincing but unsupported claims. The recommendation to disable Check until both times were valid was rejected: it prevented the AC6 feedback from appearing. The claim that the page supported the complete end-of-day boundary was modified because native time inputs cannot enter 24:00. The next improvement should stay in scope: add small automated UI checks for the existing cases, especially repeated checks and the narrow layout, without adding booking creation or persistent data.
 
 ## 11. Appendix A — AI exchanges
 
@@ -334,6 +338,8 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 **Response:**
 
 ~~~~text
+Record note: the Week 06 report preserved only the file list below, not the complete wording of Bolt's response. The rest cannot be pasted faithfully, so it is not reconstructed here. The exported files and screenshot are the primary v1 evidence. Source inspection confirmed that the first version created a React page with selectable fictional rooms, time inputs, an availability decision panel, and validation reasons. The exact preserved response portion is:
+
 src/data/rooms.ts — fictional sample room + booking data
 src/lib/availability.ts — the availability logic (AC1–AC5) and time helpers
 src/App.tsx — the full UI: form, decision panel, and room detail view (using lucide-react icons and Tailwind)
@@ -341,22 +347,56 @@ src/App.tsx — the full UI: form, decision panel, and room detail view (using l
 
 ### B4
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
-- **Stage:** (write here)
-- **Source:** (write here)
+- **Tool:** Codex
+- **Model:** GPT-5
+- **Date:** 2026-11-06
+- **Stage:** Critique
+- **Source:** this SIS
 
 **Prompt:**
 
 ~~~~text
-(paste here)
+Review `code/booking.py` and the reused final page against fixed AC1–AC6. Check bounds, exactly 120 minutes, blocked rooms, endpoint contact, input immutability, clear decisions, and narrow layout. Identify any limitation, but do not change the rules or add booking creation, login, backend, database, storage, or APIs. Give claims that can be verified by a named test.
 ~~~~
 
 **Response:**
 
 ~~~~text
-(paste here)
+1. Python AC1–AC5: the first condition enforces 0 <= start < end <= 1440 and start > now. The next branches reject duration above 120, blocked rooms, and real overlap. The strict overlap comparisons allow endpoint contact. The function only reads `existing`, so it does not mutate it. Verify with T1–T11 and an unchanged-input test.
+
+2. Page AC1–AC5: `checkAvailability` mirrors the same rules and returns reasons without adding bookings. Verify endpoint contact with T1, overlap with T2/T10, blocked state with T3, duration with T4/T5, start-now with T6, reversed input with T7, and repeated checking with T11.
+
+3. Limitation: the logic permits end=1440, but the native time field and `parseTime` accept only 00:00–23:59. Therefore the full end-of-day boundary is not expressible in the UI. Record T8 and T9 as Not testable instead of claiming a result.
+
+4. AC6: the responsive grid is usable at 375 px, but disabling Check until both times are valid would hide the existing missing-input explanation. Keep the final button actionable when a room is selected and show the validation panel. Add a polite live region so the changed decision is announced.
+
+5. Do not append a successful request to the bookings or connect a database. That would change the check-only scope and could violate AC5.
+~~~~
+
+### B5
+
+- **Tool:** Codex
+- **Model:** GPT-5
+- **Date:** 2026-11-06
+- **Stage:** Repair
+- **Source:** this SIS
+
+**Prompt:**
+
+~~~~text
+Repair only these observed issues. First, the reused final has only the 600–660 booking in every room, so page case T10 cannot use a second 700–760 booking. Keep Engineering Lab A as the standard one-booking fixture and add 700–760 only to Design Studio 2. Second, preserve the reachable missing-time message and announce changed results with `aria-live="polite"` for AC6. Do not change AC1–AC5, mutate bookings, or add login, backend, database, storage, analytics, or network calls. Rebuild and retest T1–T12.
+~~~~
+
+**Response:**
+
+~~~~text
+Implemented two focused changes.
+
+- `src/data/rooms.ts`: kept Engineering Lab A with only the 600–660 base interval and added the 700–760 fictional interval only to Design Studio 2. This makes T10 selectable without changing the base fixture for the other cases.
+- `src/App.tsx`: kept Check enabled when a room is selected and wrapped the decision in `aria-live="polite"` with `aria-atomic="true"`. Availability logic and booking arrays were not changed.
+- `index.html`: removed unused remote preview metadata and added a local page description; no network feature was added.
+
+The production build passed. Firefox WebDriver then observed: T1 Available; T2, T3, T5, T6, T7, and T10 Unavailable; T4, T11, and T12 Available; T8 and T9 Not testable because the native field cannot express 24:00 or 24:01. Empty input showed “Enter valid times first,” and T12 remained usable at 375 px.
 ~~~~
 
 ## 12. Appendix B — Test output
@@ -367,7 +407,30 @@ src/App.tsx — the full UI: form, decision panel, and room detail view (using l
      code/ — the part ending in "Ran N tests" and OK or FAILED. -->
 
 ~~~~text
-(paste here)
+test_blocked_room_rejected (test_booking.BookingTests.test_blocked_room_rejected) ... ok
+test_contains_existing_rejected (test_booking.BookingTests.test_contains_existing_rejected) ... ok
+test_day_bound_exceeds_midnight_rejected (test_booking.BookingTests.test_day_bound_exceeds_midnight_rejected) ... ok
+test_day_bound_midnight_allowed (test_booking.BookingTests.test_day_bound_midnight_allowed) ... ok
+test_empty_existing_allowed (test_booking.BookingTests.test_empty_existing_allowed) ... ok
+test_exactly_two_hours_allowed (test_booking.BookingTests.test_exactly_two_hours_allowed) ... ok
+test_input_unchanged (test_booking.BookingTests.test_input_unchanged) ... ok
+test_input_unchanged_unsorted (test_booking.BookingTests.test_input_unchanged_unsorted) ... ok
+test_input_unchanged_when_rejected (test_booking.BookingTests.test_input_unchanged_when_rejected) ... ok
+test_inside_existing_rejected (test_booking.BookingTests.test_inside_existing_rejected) ... ok
+test_multiple_existing_overlap_rejected (test_booking.BookingTests.test_multiple_existing_overlap_rejected) ... ok
+test_over_two_hours_rejected (test_booking.BookingTests.test_over_two_hours_rejected) ... ok
+test_overlap_rejected (test_booking.BookingTests.test_overlap_rejected) ... ok
+test_reversed_times_rejected (test_booking.BookingTests.test_reversed_times_rejected) ... ok
+test_starts_now_rejected (test_booking.BookingTests.test_starts_now_rejected) ... ok
+test_strict_boolean_return_type (test_booking.BookingTests.test_strict_boolean_return_type) ... ok
+test_touching_end_is_allowed (test_booking.BookingTests.test_touching_end_is_allowed) ... ok
+test_touching_start_is_allowed (test_booking.BookingTests.test_touching_start_is_allowed) ... ok
+test_zero_length_rejected (test_booking.BookingTests.test_zero_length_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.000s
+
+OK
 ~~~~
 
 ### 12.2 Path B only — three faults you planted
@@ -388,4 +451,6 @@ src/App.tsx — the full UI: form, decision panel, and room detail view (using l
 
 | Check ID or limitation | Why it stays | What I would do next |
 | --- | --- | --- |
-| (write here) | (write here) | (write here) |
+| Page T8 and T9 | Native `type="time"` and `parseTime` cannot express 24:00 or 24:01. | Keep them declared Not testable; no scope expansion is needed. |
+| Week 05 prompt record | The exact original Plan and Generate prompts were not preserved. | Keep the gap disclosed and never reconstruct the missing chat. |
+| Owner review | The assistant completed and verified the work, but the student owner has not independently reviewed it in this session. | Review the source, evidence, and AC reasoning before defending the submission. |

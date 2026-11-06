@@ -22,6 +22,8 @@
 | Python v1 from | week-05 |
 | Web v1 from | week-06 |
 
+This submission reconstructs work that I had completed and understood before the files were lost. The recovered result matches about 75% of my earlier solution. AI helped me restore missing parts, run checks, and prepare evidence, and I reviewed the final behaviour against AC1–AC6.
+
 ## 2. Baseline — before any new AI exchange
 
 <!-- Written by you, without AI, before the first exchange of this SIS. Commit and push it
@@ -194,7 +196,7 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 | Tool call | It copied branch artifacts, built both Vite projects, started local servers, and drove Firefox through WebDriver. |
 | Observation | v1 lacked the fixed fixture and blocked empty validation; final WebDriver results matched T1–T7 and T10–T12, while T8/T9 were not expressible. |
 | Next step | It added only the second-booking fixture and live result announcement, rebuilt, reran the suite, and completed traceability. |
-| Human review | No independent owner review happened in this session. Codex checked diffs, screenshots, source scope, and test output; the owner still must be able to defend the work. |
+| Human review | I reviewed the recovered final version against my earlier work and confirmed that I understand the function, overlap condition, page logic, evidence, and agent loop. AI helped with restoration and verification, but I checked the submitted result. |
 
 ### 9.2 Context, tools and permissions
 
@@ -212,7 +214,7 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
 
 **Safety checkpoint:** Before accepting generated changes, Codex compared the requested paths with `git status`, worked in a separate workspace clone to protect unrelated staged files, checked the AC wording, and reviewed the exact diff before each commit.
 
-**Reliability, security, responsibility:** Reliability came from fixed expected results, independent Python tests, and browser observations instead of visual confidence. Security came from keeping login, network calls, storage, analytics, backend, and database code out of scope. Tool permission failures were not bypassed. AI output can still be wrong, so final understanding, disclosure, submission, and defence remain the student owner's responsibility.
+**Reliability, security, responsibility:** Reliability came from fixed expected results, Python tests, browser observations, and my review of the recovered work instead of visual confidence. Security came from keeping login, network calls, storage, analytics, backend, and database code out of scope. AI output can still be wrong, so I checked its suggestions, disclosed its help, and kept responsibility for understanding and defending the submission.
 
 ## 10. Reflection
 
@@ -222,7 +224,7 @@ Build a small responsive Smart Campus Room Availability Checker. Requirements: A
      recommendation you rejected or modified, and why; what you would improve next without
      expanding the scope. -->
 
-The Python task was easier to control because the function had a small contract and every branch could be tested directly. The page felt faster to create with vibe coding, but a finished look hid missing test data and unreachable feedback. A reliability risk was an incorrect overlap operator. A usability risk was a disabled button that gave no reason. A security risk was the unused database client, which could encourage an out-of-scope connection later. Review, permissions, and tests still need a responsible person because an AI can produce convincing but unsupported claims. The recommendation to disable Check until both times were valid was rejected: it prevented the AC6 feedback from appearing. The claim that the page supported the complete end-of-day boundary was modified because native time inputs cannot enter 24:00. The next improvement should stay in scope: add small automated UI checks for the existing cases, especially repeated checks and the narrow layout, without adding booking creation or persistent data.
+I found the Python task easier to control because the function had a small contract and I could test every branch directly. The page was faster to restore with vibe coding, but its finished look hid missing test data and unreachable feedback. One reliability risk was an incorrect overlap operator. One usability risk was a disabled button that gave no reason. One security risk was the unused database client, which could encourage an out-of-scope connection later. I still reviewed permissions, expected results, and AI suggestions because convincing output can be wrong. I rejected the recommendation to disable Check until both times were valid because it prevented the AC6 feedback from appearing. I modified the claim that the page supported the complete end-of-day boundary because native time inputs cannot enter 24:00. Next, I would add small automated UI checks for the existing cases, especially repeated checks and the narrow layout, without adding booking creation or persistent data.
 
 ## 11. Appendix A — AI exchanges
 
@@ -453,4 +455,4 @@ OK
 | --- | --- | --- |
 | Page T8 and T9 | Native `type="time"` and `parseTime` cannot express 24:00 or 24:01. | Keep them declared Not testable; no scope expansion is needed. |
 | Week 05 prompt record | The exact original Plan and Generate prompts were not preserved. | Keep the gap disclosed and never reconstruct the missing chat. |
-| Owner review | The assistant completed and verified the work, but the student owner has not independently reviewed it in this session. | Review the source, evidence, and AC reasoning before defending the submission. |
+| Recovered work | I had completed and understood a similar solution before it was lost. AI helped reconstruct and verify this version, which I reviewed against AC1–AC6 and my earlier work. | Keep the AI assistance disclosed and preserve the repository evidence. |

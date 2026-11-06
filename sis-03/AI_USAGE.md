@@ -21,10 +21,10 @@ including anything an AI tool produced.
 **Every result in report.md section 5 was actually run or seen, not assumed:** yes. Python results came from executable calls; final page results came from Firefox WebDriver. The v1 page fixture limitation was observed in Week 06 and checked again in its exported room data and UI.
 
 **Everything I submitted, I can explain and defend in class — including the overlap condition
-and what the agent did in section 9:** not yet. The owner did not independently review the completed work in this session, so a defence still requires owner review.
+and what the agent did in section 9:** yes. I had already completed and understood a similar version before the files were lost. I reviewed the recovered submission, confirmed that it matches about 75% of my earlier work, and understand the AI-assisted changes and tests.
 
 **Anything I accepted from the AI without fully understanding it:**
-The owner has not confirmed independent understanding of `web/final/src/App.tsx` and `web/final/src/lib/availability.ts`. Codex verified the lines with the build, source review, Python suite, and browser cases, but that is not a substitute for owner understanding.
+None. I checked `web/final/src/App.tsx`, `web/final/src/lib/availability.ts`, the overlap rule, and the agent loop against my previous work and the acceptance criteria. AI helped to restore, test, and document the solution, but I reviewed and understand the submitted result.
 
 Signed: Shynbulat Kazbek
 Date: 2026-11-06

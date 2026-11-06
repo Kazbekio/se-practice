@@ -143,8 +143,10 @@ requests* · *mocked booking function*, or your own) and the AC that decides it.
 
 | # | Test or part of the suite | What is weak or wrong | Decision: accept / revise / reject | AC or reason |
 | --- | --- | --- | --- | --- |
-| 1 | | | accept / revise / reject | |
-| 2 | | | accept / revise / reject | |
+| 1 | Import and test target | It imports the real `canBook` from `./booking` and does not mock it. | accept | The tests exercise the same function that `App.tsx` calls. |
+| 2 | T01–T14 | The inputs and exact `toBe(true/false)` results match the reviewed plan. | accept | AC1–AC4 decide these results, and each test gets a fresh booking array. |
+| 3 | AC5 test | It checks only the decision and never compares bookings before and after the call. | revise | AC5 says an availability check must not change existing data. |
+| 4 | X1 and X2 | Both planned boundary cases are missing from the generated file. | reject | AC1 boundaries at 1440 and a one-minute interval need direct tests. |
 
 ---
 
@@ -157,7 +159,10 @@ The **real** terminal output of the first run of the first suite, pasted unedite
 is not a run.
 
 ```text
-(paste here)
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+
+Test Files  1 passed (1)
+     Tests  15 passed (15)
 ```
 
 **Each failure, diagnosed** (the deck's table: import/runner error · assertion mismatch · result
@@ -165,7 +170,7 @@ changing per run · no tests discovered). Write `none` in the first row if nothi
 
 | Failing test | Observed failure | First check | Test repair or implementation fix? | Action taken |
 | --- | --- | --- | --- | --- |
-| | | | | |
+| none | No failure; all 15 generated tests passed. | I still compared the suite with the plan and ACs. | Test repair | I kept correct expectations, added the missing cases, and strengthened AC5. |
 
 ### 6.2 The improvement prompt
 
@@ -173,7 +178,30 @@ The deck's improvement prompt exactly as sent, followed by the actual output fro
 paste the assistant's answer, unedited:
 
 ```text
-(paste here)
+Review this test suite against AC1–AC6 and our case table. Identify incorrect expectations, weak assertions, duplicated cases, and missing boundaries.
+
+For each proposed change, explain the requirement and the defect it could detect. Improve the tests without changing correct expectations to match buggy behavior.
+
+Use the actual failure output below. Separate test repairs from implementation fixes.
+
+RUN  v4.1.12 /home/nqmvl/se-practice/week-07/app
+
+Test Files  1 passed (1)
+     Tests  15 passed (15)
+
+Assistant answer:
+
+Test repairs:
+1. Keep the T01–T14 expectations. They match the case table and use exact boolean assertions.
+2. Revise AC5. Copy the bookings before an Available call and compare the array after the call. This can detect code that changes existing data while checking availability.
+3. Add X1 for 1320–1440 with no bookings. AC1 allows end = 1440 and AC2 allows exactly 120 minutes. This can detect an incorrect end-of-day boundary.
+4. Add X2 for 541–542 with no bookings. AC1 allows a positive one-minute interval after now. This can detect a rule that requires a longer minimum duration.
+
+Incorrect expectations: none found.
+Duplicated cases: none found.
+
+Implementation fixes:
+None. The actual output is green and no correct test shows a defect in canBook.
 ```
 
 ### 6.3 The final run

@@ -64,8 +64,18 @@ describe('canBook', () => {
     expect(canBook({ start: 630, end: 690, ...fixture(), bookings: [] })).toBe(true);
   });
 
-  test('AC5: an availability check returns a decision', () => {
+  test('AC5: an available check does not change existing bookings', () => {
     const bookings = [{ start: 600, end: 660 }];
+    const before = structuredClone(bookings);
     expect(canBook({ start: 660, end: 720, now: 540, blocked: false, bookings })).toBe(true);
+    expect(bookings).toEqual(before);
+  });
+
+  test('X1 AC1 AC2: an interval may end exactly at 1440', () => {
+    expect(canBook({ start: 1320, end: 1440, now: 540, blocked: false, bookings: [] })).toBe(true);
+  });
+
+  test('X2 AC1: a one-minute interval after now is allowed', () => {
+    expect(canBook({ start: 541, end: 542, now: 540, blocked: false, bookings: [] })).toBe(true);
   });
 });

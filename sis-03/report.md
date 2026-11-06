@@ -13,14 +13,14 @@
 
 | Item | Value |
 | --- | --- |
-| Coding assistant (tool) | (write here) |
-| Coding assistant model | (write here) |
-| Bolt.new model | (write here) |
-| Bolt project link | (write here) |
-| Language | (write here) |
-| Path | (write here) |
-| Python v1 from | (write here) |
-| Web v1 from | (write here) |
+| Coding assistant (tool) | ChatGPT (web) |
+| Coding assistant model | GPT-5.5 Instant |
+| Bolt.new model | GLM 5.3 Flash |
+| Bolt project link | https://bolt.new/~/sb1-ykg88ykq |
+| Language | Python 3.14.4 |
+| Path | A |
+| Python v1 from | week-05 |
+| Web v1 from | week-06 |
 
 ## 2. Baseline — before any new AI exchange
 
@@ -82,17 +82,19 @@
 
 | Branch in v1 (quoted) | AC | Satisfies it? | Why |
 | --- | --- | --- | --- |
-| (write here) | (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) | (write here) |
+| `if not (0 <= start < end <= 1440 and start > now):` | AC1 | Yes | The chained bounds enforce the day, order, and strict future-start rules. |
+| `if end - start > 120:` | AC2 | Yes | It rejects only durations above 120, so exactly 120 remains valid. |
+| `if blocked:` | AC3 | Yes | Every request returns `False` when the room is blocked. |
+| `for existing_start, existing_end in existing:` | AC4, AC5 | Yes | It reads every existing interval without sorting or changing the collection. |
+| `if start < existing_end and existing_start < end:` | AC4 | Yes | Both strict comparisons find real overlap and allow endpoint contact. |
+| `return True` | AC5 | Yes | It is reached only after AC1–AC4 pass and returns a real Boolean. |
 
 ## 4. Prototype v1 in Bolt.new
 
 **Prompt as sent:**
 
 ~~~~text
-(paste here)
+Build a small responsive Smart Campus Room Availability Checker. Requirements: AC1: Accept a candidate interval only when 0 ≤ start < end ≤ 1440 and start is after the supplied current time. AC2: Reject a booking longer than 120 minutes. AC3: Reject the request when the selected room is blocked. AC4: Reject any interval that overlaps an existing booking; touching endpoints are allowed. AC5: Show a clear Available / Unavailable decision without changing the existing booking data. AC6: The page remains usable at desktop and narrow/mobile width and gives understandable validation feedback. Intervals include the start and exclude the end. Other rules still apply. Use fictional sample data only. Keep the implementation simple and within one-page scope. Do not add authentication, backend services, analytics, or unrelated features. After building, briefly list the main files/components you created.
 ~~~~
 
 <!-- Main generated files or components, with their path inside web/original/
@@ -100,12 +102,16 @@
 
 | Generated file or component | Path | Its role |
 | --- | --- | --- |
-| (write here) | (write here) | (write here) |
-| (write here) | (write here) | (write here) |
+| `App` | `src/App.tsx` | Renders the room selector, time fields, result panel, and room details. |
+| `checkAvailability` | `src/lib/availability.ts` | Applies AC1–AC5 and returns the decision with validation reasons. |
+| `SAMPLE_ROOMS` | `src/data/rooms.ts` | Stores the fictional room status and existing booking intervals. |
 
 **What v1 does:**
 
-- (write here)
+- It lets a user supply the current time, choose one room, enter start and end times, and check availability.
+- It shows clear Available or Unavailable panels and lists the reasons for a rejection.
+- Its room data does not provide the required base fixture of only 10:00–11:00, so T1–T11 cannot be set up exactly.
+- Its missing-time message exists but cannot be reached because the Check button is disabled for empty inputs.
 
 ## 5. Test cases — executed on both artifacts
 
@@ -225,62 +231,112 @@
 
 ### B1
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
-- **Stage:** (write here)
-- **Source:** (write here)
+- **Tool:** ChatGPT (web)
+- **Model:** GPT-5.5 Instant
+- **Date:** 2026-10-15
+- **Stage:** Plan
+- **Source:** week-05
 
 **Prompt:**
 
 ~~~~text
-(paste here)
+The exact original Plan prompt was not preserved in the Week 05 report. I am declaring that gap instead of reconstructing a prompt that I cannot verify.
 ~~~~
 
 **Response:**
 
 ~~~~text
-(paste here)
+Implementation plan for can_book
+
+1. Checks in order
+1. Validate the time interval (AC1). Check that 0 <= start < end <= 1440 and start > now.
+2. Check duration (AC2). Verify that end - start <= 120 minutes.
+3. Check room status (AC3). If blocked is True, return False.
+4. Check existing bookings (AC4). For each existing interval (existing_start, existing_end), reject the request if the intervals overlap.
+  - Overlap condition: start < existing_end and existing_start < end.
+  - If one booking ends exactly when the other starts, they do not overlap.
+5. Return the decision (AC5). Return True only if all checks pass; otherwise, return False. Never modify existing or any input.
+
+2. Assumptions
+- All times are integer minutes after midnight on the same date.
+- now is valid, and every existing booking is valid, as specified in the contract.
+- blocked is a Boolean.
+- The function checks only one selected room and does not save bookings or send confirmations.
+- Invalid requested intervals must return False, not raise an exception.
+- Because intervals include the start and exclude the end, adjacent bookings are allowed.
+
+3. Boundary cases to test
+- Start equals now: False.
+- End at 1440: True if otherwise valid; end at 1441: False.
+- Duration 120: True if otherwise valid; duration 121: False.
+- A blocked room: False.
+- Endpoint contact: True; partial or contained overlap: False.
+- Multiple bookings: False if any one overlaps.
+- Input immutability: `existing` stays unchanged.
+
+Important: Test each acceptance criterion independently, then test combinations. Every invalid case must return False.
 ~~~~
 
 ### B2
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
-- **Stage:** (write here)
-- **Source:** (write here)
+- **Tool:** ChatGPT (web)
+- **Model:** GPT-5.5 Instant
+- **Date:** 2026-10-15
+- **Stage:** Generate
+- **Source:** week-05
 
 **Prompt:**
 
 ~~~~text
-(paste here)
+The exact original Generate prompt was not preserved in the Week 05 report. The generated file below was preserved unchanged, so I do not reconstruct the missing prompt.
 ~~~~
 
 **Response:**
 
 ~~~~text
-(paste here)
+def can_book(start, end, now, blocked, existing):
+    # AC1: Validate the interval and require a future start time.
+    if not (0 <= start < end <= 1440 and start > now):
+        return False
+
+    # AC2: The booking must not exceed 120 minutes.
+    if end - start > 120:
+        return False
+
+    # AC3: A blocked room cannot be booked.
+    if blocked:
+        return False
+
+    # AC4: Reject any overlap with an existing booking.
+    # Intervals include their start and exclude their end.
+    for existing_start, existing_end in existing:
+        if start < existing_end and existing_start < end:
+            return False
+
+    # AC5: All acceptance criteria are satisfied.
+    return True
 ~~~~
 
 ### B3
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
-- **Stage:** (write here)
-- **Source:** (write here)
+- **Tool:** Bolt.new
+- **Model:** GLM 5.3 Flash
+- **Date:** 2026-10-18
+- **Stage:** Generate
+- **Source:** week-06
 
 **Prompt:**
 
 ~~~~text
-(paste here)
+Build a small responsive Smart Campus Room Availability Checker. Requirements: AC1: Accept a candidate interval only when 0 ≤ start < end ≤ 1440 and start is after the supplied current time. AC2: Reject a booking longer than 120 minutes. AC3: Reject the request when the selected room is blocked. AC4: Reject any interval that overlaps an existing booking; touching endpoints are allowed. AC5: Show a clear Available / Unavailable decision without changing the existing booking data. AC6: The page remains usable at desktop and narrow/mobile width and gives understandable validation feedback. Intervals include the start and exclude the end. Other rules still apply. Use fictional sample data only. Keep the implementation simple and within one-page scope. Do not add authentication, backend services, analytics, or unrelated features. After building, briefly list the main files/components you created.
 ~~~~
 
 **Response:**
 
 ~~~~text
-(paste here)
+src/data/rooms.ts — fictional sample room + booking data
+src/lib/availability.ts — the availability logic (AC1–AC5) and time helpers
+src/App.tsx — the full UI: form, decision panel, and room detail view (using lucide-react icons and Tailwind)
 ~~~~
 
 ### B4

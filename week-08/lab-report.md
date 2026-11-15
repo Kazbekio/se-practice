@@ -5,8 +5,9 @@
 **Group:** not provided
 **Date:** 2026-11-15
 
-Fill in every section. **Do not delete, rename or renumber the headings.** The checker and the
-grader find your answers by them. You can add rows to any table, but never remove its header.
+Repository: https://github.com/Kazbekio/se-practice
+
+I followed the work and understand the two bugs and their fixes. Codex carried out the file edits, tests and GitHub steps. The disclosure explains which manual steps were automated.
 
 ---
 
@@ -23,7 +24,7 @@ grader find your answers by them. You can add rows to any table, but never remov
 
 ---
 
-The source is the committed Week 07 app at `9c43b5b`. Before setup, I saved the local untracked files in a stash and confirmed a clean `week-08` branch. The inherited lock file had incorrect platform metadata. I fixed that metadata before installing; all dependency versions and the 17 original tests stayed the same. Details are in `evidence/00-setup.txt`.
+The source is the committed Week 07 app at `9c43b5b`. Before setup, I saved the local untracked files in a stash and confirmed a clean `week-08` branch. The inherited lock file had incorrect platform metadata. I fixed that metadata before installing; all dependency versions and the 17 original tests stayed the same. Details are in `evidence/00-setup.txt`. A fresh install from the final lock file also succeeded (`evidence/00-clean-install.txt`). The first offline retry was blocked by sandbox permissions for the esbuild binary; its original error is kept in `evidence/00-clean-install-sandbox.txt`. It succeeded after the same command was allowed to run outside that sandbox.
 
 ## 2. Task 1 — baseline, buggy code, failing tests
 
@@ -782,7 +783,42 @@ Both esbuild and oxc options were set. oxc options will be used and esbuild opti
    Duration  143ms (transform 21ms, setup 0ms, import 32ms, tests 7ms, environment 0ms)
 ```
 
-All 19 tests pass. T01, T08 and BUG-A allow touching endpoints. T09-T12 still reject real overlaps. AC5 and BUG-B compare the array with its earlier copy. The Vitest startup warnings come from the inherited React/Vite setup; they are included in the raw output and did not fail the run.
+The full suite also passed after the fresh dependency install (`evidence/10-after-clean-install.txt`). All 19 tests pass. T01, T08 and BUG-A allow touching endpoints. T09-T12 still reject real overlaps. AC5 and BUG-B compare the array with its earlier copy. The Vitest startup warnings come from the inherited React/Vite setup; they are included in the raw output and did not fail the run.
+
+I also checked the production build with `npm run build`:
+
+```text
+
+> smart-campus-availability@0.0.0 build
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 32 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.42 kB │ gzip:  0.28 kB
+dist/assets/index-X8OGNIvT.css    0.66 kB │ gzip:  0.36 kB
+dist/assets/index-S3CF_WEU.js   144.73 kB │ gzip: 46.62 kB
+✓ built in 585ms
+```
+
+The following real browser checks used the built app:
+
+```text
+Date: 2026-11-15
+Real Chromium checks on the production build.
+PASS desktop: two checks of 11:00-12:00 stay Available and preserve the booking list (AC4, AC5).
+PASS desktop: 10:30-11:30 overlaps the existing booking and returns Unavailable (AC4).
+PASS desktop: 120 minutes is allowed and 121 minutes is rejected (AC2).
+PASS desktop: a blocked room returns Unavailable (AC3).
+PASS desktop: current-time and reversed requests are rejected; reversed time has clear feedback (AC1, AC6).
+PASS desktop: an empty field shows the validation message (AC6).
+PASS mobile 390x844: the endpoint request is Available, controls are visible and there is no horizontal overflow (AC4, AC6).
+PASS browser: no JavaScript page errors.
+```
+
+Screenshots: `evidence/ui-desktop.png`, `evidence/ui-overlap.png` and `evidence/ui-mobile.png`.
 
 ## 9. What still fails, and what AI-assisted debugging cannot do
 
@@ -792,12 +828,15 @@ Use the same IDs as `known_fails` in `submission.yml`. Write `none` if the run i
 
 | Check | Why it stays |
 | --- | --- |
-| | |
+| none | The final checker has no FAIL or ERROR. |
+
+Checker result: **31 PASS, 0 FAIL, 0 ERROR**.
+
+The checker reads file content. Its green result does not prove that a skill was installed or that the two responses came from fresh chats. The manual skill step and independent-chat step were not completed as written; the same-session simulation and Codex authorship are disclosed in section 4 and AI_USAGE.md.
 
 ### 9.2 One limitation of AI-assisted debugging
 
-<!-- Use something that actually happened in sections 5-8. 20 words or more. -->
--
+The old AC5 test had a useful title, but its first assertion stopped at BUG-A and never checked the changed array. An AI could read the title and claim that mutation was already tested. I needed the separate BUG-B input and the real terminal failure to prove which defect each test could see. The two diagnosis responses also shared one session, so they cannot show that the skill improved independent reasoning.
 
 ---
 
@@ -812,3 +851,5 @@ Use the same IDs as `known_fails` in `submission.yml`. Write `none` if the run i
      visible after the BUG-A patch: the AC5 test had been failing for the wrong reason." -->
 
 <!-- Write your conclusion below this line -->
+
+The skill made the explanation easier to read, as the clarity row shows, but both responses found the same two bugs and proposed the same small fixes, so my verdict is no difference in correctness. My tests showed that touching endpoints are allowed, real overlaps are rejected, and an available check keeps the original bookings unchanged for the tested inputs. I understand why the old AC5 test first failed for the wrong reason, and I can explain both faulty lines, both fixes, and their evidence in a defence. The green suite proves these fixed cases, but it does not prove every possible input or a benefit from the skill, because this comparison used one shared Codex session.

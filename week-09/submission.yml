@@ -1,0 +1,38 @@
+# Week 09 declaration. Date: 2026-11-15.
+schema: 1
+week: "09"
+
+student:
+  name: Shynbulat Kazbek
+  student_id: 24B032123
+  github: Kazbekio
+
+assistant:
+  tool: OpenAI Codex
+  model: not displayed
+  fresh_chats: yes
+
+calls:
+  r3: asked
+  first_run_s_fails: 9
+
+checker:
+  pass: 30
+  fail: 0
+  error: 0
+  commit: 71afda6
+  known_fails: []
+
+review_findings:
+  - "S03 and S10: integer types reject clock strings and fractional minutes; the untouched starter accepted both."
+  - "S08 and S12: each bookings item must be an object with both start and end; incomplete objects and pairs are rejected."
+  - "R1: the model converted 9:00, 10:00, 11:00 and 12:00 correctly; the request only touches the existing booking."
+  - "R2: end is 990 and blocked is true; the schema accepts the call while AC2 and AC3 make the room Unavailable."
+  - "R3: the model asked for exact times, now, blocked status and bookings without inventing values."
+  - "A5 and A7: an automatic hard reset risks unrelated work, and a direct push to main skips PR review."
+
+honesty:
+  definition_written_by_me: no
+  calls_unedited: yes
+  outputs_unedited: yes
+  ai_usage_disclosed: yes

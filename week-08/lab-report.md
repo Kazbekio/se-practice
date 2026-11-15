@@ -695,10 +695,94 @@ BUG-A, T01 and T08 now pass. AC5 now reaches its array comparison and fails beca
 The change as a diff, then the real output of the **full** suite. Every test must pass.
 
 ```text
-(paste here)
+diff --git a/week-08/app/src/booking.ts b/week-08/app/src/booking.ts
+index eb25f4b..503abbe 100644
+--- a/week-08/app/src/booking.ts
++++ b/week-08/app/src/booking.ts
+@@ -26,6 +26,5 @@ export function canBook({ start, end, now, blocked, bookings }: {
+     if (start < b.end && end > b.start) return false;
+   }
+   // keep the room's list current with the slot that was just found free
+-  bookings.push({ start, end });
+   return true;
+ }
 ```
 
 ---
+
+Codex deleted the one line that changed the caller's array. I understand why an availability check should only return a result. The original comment was kept so that the repair changes only the two required code lines.
+
+Targeted BUG-B run:
+
+```text
+8:29:58 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:29:58 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ ↓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+ ↓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected
+ ↓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected
+ ↓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected
+ ↓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected
+ ↓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed
+ ↓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected
+ ↓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed
+ ↓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected
+ ↓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected
+ ↓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected
+ ↓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected
+ ↓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected
+ ↓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap
+ ↓ src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+ ↓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440
+ ↓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed
+ ↓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available
+ ✓ src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 2ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 18 skipped (19)
+   Start at  08:29:58
+   Duration  125ms (transform 20ms, setup 0ms, import 30ms, tests 3ms, environment 0ms)
+```
+
+Full suite after both fixes, with no test filter:
+
+```text
+8:29:58 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:29:58 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ ✓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed 1ms
+ ✓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap 0ms
+ ✓ src/booking.test.ts > canBook > AC5: an available check does not change existing bookings 1ms
+ ✓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440 0ms
+ ✓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed 0ms
+ ✓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available 0ms
+ ✓ src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 0ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  08:29:58
+   Duration  143ms (transform 21ms, setup 0ms, import 32ms, tests 7ms, environment 0ms)
+```
+
+All 19 tests pass. T01, T08 and BUG-A allow touching endpoints. T09-T12 still reject real overlaps. AC5 and BUG-B compare the array with its earlier copy. The Vitest startup warnings come from the inherited React/Vite setup; they are included in the raw output and did not fail the run.
 
 ## 9. What still fails, and what AI-assisted debugging cannot do
 

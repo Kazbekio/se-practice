@@ -1,0 +1,31 @@
+8:29:58 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:29:58 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ ↓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+ ↓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected
+ ↓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected
+ ↓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected
+ ↓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected
+ ↓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed
+ ↓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected
+ ↓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed
+ ↓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected
+ ↓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected
+ ↓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected
+ ↓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected
+ ↓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected
+ ↓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap
+ ↓ src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+ ↓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440
+ ↓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed
+ ↓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available
+ ✓ src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 2ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 18 skipped (19)
+   Start at  08:29:58
+   Duration  125ms (transform 20ms, setup 0ms, import 30ms, tests 3ms, environment 0ms)
+

@@ -1,0 +1,13 @@
+T01 requests 660-720 after a booking at 600-660. AC4 says this must be Available because the times only touch. The overlap line uses start <= b.end and end >= b.start. Both comparisons are true here, so the function returns false at the shared endpoint.
+
+The minimal BUG-A patch is one line:
+- if (start <= b.end && end >= b.start) return false;
++ if (start < b.end && end > b.start) return false;
+
+There is also a second problem in the code: bookings.push({ start, end }) adds a new item to the caller's array. This breaks AC5. Delete that one line for BUG-B. The T01 failure does not reach the push, so that failure alone does not prove the mutation happened.
+
+For BUG-A, use now 540, blocked false, bookings 600-660 and 720-780, and request 660-720. Assert that the result is exactly true. This checks both touching sides in one request.
+
+For BUG-B, use fresh bookings 600-660 and 840-900, copy them before the call, and request 765-810 with now 540 and blocked false. Assert true, then compare bookings with the copy. This request touches nothing, so BUG-A cannot stop the call before the push.
+
+Run both tests on the broken function first. After each small fix, rerun its test and the full suite, including T09-T12 for real overlaps. I have not edited code or run tests for this diagnosis.

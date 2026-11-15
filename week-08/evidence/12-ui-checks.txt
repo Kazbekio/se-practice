@@ -1,0 +1,10 @@
+Date: 2026-11-15
+Real Chromium checks on the production build.
+PASS desktop: two checks of 11:00-12:00 stay Available and preserve the booking list (AC4, AC5).
+PASS desktop: 10:30-11:30 overlaps the existing booking and returns Unavailable (AC4).
+PASS desktop: 120 minutes is allowed and 121 minutes is rejected (AC2).
+PASS desktop: a blocked room returns Unavailable (AC3).
+PASS desktop: current-time and reversed requests are rejected; reversed time has clear feedback (AC1, AC6).
+PASS desktop: an empty field shows the validation message (AC6).
+PASS mobile 390x844: the endpoint request is Available, controls are visible and there is no horizontal overflow (AC4, AC6).
+PASS browser: no JavaScript page errors.

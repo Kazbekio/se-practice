@@ -1,0 +1,50 @@
+# Week 08 declaration. Date: 2026-11-15.
+# See AI_USAGE.md for the manual-step and fresh-chat limitations.
+schema: 1
+week: "08"
+
+student:
+  name: Shynbulat Kazbek
+  student_id: 24B032123
+  github: Kazbekio
+
+assistant:
+  tool: OpenAI Codex
+  model: not displayed
+
+skill:
+  environment: prompt-only
+  invoked: not-shown
+
+project:
+  language: ts
+  vitest: 4.1.12
+
+counts:
+  tests_final: 19
+  buggy_failed: 3
+  defects_logged: 2
+  lines_changed: 2
+
+checker:
+  pass: 31
+  fail: 0
+  error: 0
+  commit: e0805b0
+  known_fails: []
+
+verdict:
+  skill_helped: no-difference
+
+review_findings:
+  - "BUG-A: strict inequalities allow the 660-720 gap between 600-660 and 720-780; T09-T12 still reject actual overlaps."
+  - "BUG-B: the 765-810 request touches neither booking, so its changed-array failure is independent of BUG-A."
+  - "AC5: the original test first failed at toBe(true), so it did not reach the array comparison until BUG-A was fixed."
+  - "SKILL.md: both recorded answers found the same defects; a single shared session cannot prove an independent skill benefit."
+  - "booking.ts: the two repairs change only two body lines, with one bug fixed in each commit."
+
+honesty:
+  buggy_function_pasted_unchanged: yes
+  same_input_both_chats: no
+  outputs_unedited: yes
+  ai_usage_disclosed: yes

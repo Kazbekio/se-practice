@@ -1,0 +1,9 @@
+Date: 2026-11-15
+Command: apply the provided checker.errors to the completed inputSchema.
+Schema results below are measured. Function decisions are inferred from AC1-AC4; canBook was not run.
+AC4 endpoint contact: schema ACCEPT; expected canBook Available
+AC1 zero duration: schema ACCEPT; expected canBook Unavailable
+AC1 request in the past: schema ACCEPT; expected canBook Unavailable
+AC2 150 minutes: schema ACCEPT; expected canBook Unavailable
+AC3 blocked room: schema ACCEPT; expected canBook Unavailable
+AC4 real overlap: schema ACCEPT; expected canBook Unavailable

@@ -148,6 +148,20 @@ AC5 is about behavior after a call. An input schema cannot stop a function from 
 
 AC6 is about clear page feedback on desktop and mobile. A schema has no page to inspect, so UI code and browser checks must cover it. Even canBook alone cannot enforce AC6.
 
+I also passed these examples through the provided Python schema validator. Every one has valid input shape. The expected canBook result comes from the acceptance criteria; I did not execute JavaScript.
+
+```text
+Date: 2026-11-15
+Command: apply the provided checker.errors to the completed inputSchema.
+Schema results below are measured. Function decisions are inferred from AC1-AC4; canBook was not run.
+AC4 endpoint contact: schema ACCEPT; expected canBook Available
+AC1 zero duration: schema ACCEPT; expected canBook Unavailable
+AC1 request in the past: schema ACCEPT; expected canBook Unavailable
+AC2 150 minutes: schema ACCEPT; expected canBook Unavailable
+AC3 blocked room: schema ACCEPT; expected canBook Unavailable
+AC4 real overlap: schema ACCEPT; expected canBook Unavailable
+```
+
 ## 6. Permissions — allow, ask or block
 
 | # | Action | Decision (allow / ask / block) | Reason (the risk, in one sentence or more) |
@@ -190,4 +204,4 @@ The lab is still in progress; this is not the final declaration of failures.
 
 ## 10. Conclusion (80–150 words)
 
-The conclusion will use the actual request replies.
+I learned that a tool definition is a small contract between the model and the client, while canBook decides availability. My first schema run accepted nine bad calls, and S03 and S10 showed why time strings and fractions need explicit type checks. A valid call can still ask for a blocked room or a slot longer than 120 minutes, so the function must apply AC2 and AC3 after the schema check. The checkpoint and my A5-A8 choices also showed me that having a terminal or an MCP tool does not give an agent permission for every action. I understand these limits and can explain the schema, the evidence, and the recovery command without the assistant.

@@ -69,7 +69,97 @@ You copied the whole `canBook` function from `buggy/booking.ts` (or `.js`) over 
 nothing else. This is the real output:
 
 ```text
-(paste here)
+8:26:27 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:26:27 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ × src/booking.test.ts > canBook > T01 AC4: touching after is allowed 6ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected 0ms
+ × src/booking.test.ts > canBook > T08 AC4: touching before is allowed 1ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap 0ms
+ × src/booking.test.ts > canBook > AC5: an available check does not change existing bookings 0ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440 0ms
+ ✓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:12:61
+     10| describe('canBook', () => {
+     11|   test('T01 AC4: touching after is allowed', () => {
+     12|     expect(canBook({ start: 660, end: 720, ...fixture() })).toBe(true);
+       |                                                             ^
+     13|   });
+     14|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/booking.test.ts > canBook > T08 AC4: touching before is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:40:61
+     38|
+     39|   test('T08 AC4: touching before is allowed', () => {
+     40|     expect(canBook({ start: 570, end: 600, ...fixture() })).toBe(true);
+       |                                                             ^
+     41|   });
+     42|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:70:83
+     68|     const bookings = [{ start: 600, end: 660 }];
+     69|     const before = structuredClone(bookings);
+     70|     expect(canBook({ start: 660, end: 720, now: 540, blocked: false, b…
+       |                                                                                   ^
+     71|     expect(bookings).toEqual(before);
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+   Start at  08:26:27
+   Duration  142ms (transform 20ms, setup 0ms, import 30ms, tests 10ms, environment 0ms)
 ```
 
 ### 2.3 One failing test per bug

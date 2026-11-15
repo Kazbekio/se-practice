@@ -335,16 +335,21 @@ I recorded these hypotheses before the paired diagnosis responses, with help fro
 
 | Check | yes / no |
 | --- | --- |
-| The file is plain UTF-8 text, named exactly `SKILL.md` (not `SKILL.md.txt`) | yes / no |
-| The first and the closing YAML delimiter are exactly three hyphens: `---` | yes / no |
-| `name` is lowercase with hyphens, and `description` says WHEN to use it | yes / no |
-| I read the whole file once: no passwords, API keys or private student data | yes / no |
+| The file is plain UTF-8 text, named exactly `SKILL.md` (not `SKILL.md.txt`) | yes |
+| The first and the closing YAML delimiter are exactly three hyphens: `---` | yes |
+| `name` is lowercase with hyphens, and `description` says WHEN to use it | yes |
+| I read the whole file once: no passwords, API keys or private student data | yes |
 
 **The contents of `skills/bug-detector.zip`.** Paste the listing (Windows: open the ZIP and copy
 the paths; macOS/Linux: `unzip -l skills/bug-detector.zip`):
 
 ```text
-(paste here)
+Archive:  week-08/skills/bug-detector.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      570  2026-11-15 08:30   bug-detector/SKILL.md
+---------                     -------
+      570                     1 file
 ```
 
 **Installation.** Where you uploaded it, what the upload said, and whether a new chat showed the
@@ -352,6 +357,10 @@ skill as enabled. If upload was not available, write `prompt-only simulation` an
 Screenshot of the result: `evidence/install.png`.
 
 <!-- Write below this line -->
+
+I used a prompt-only simulation in the current OpenAI Codex session. This environment does not provide a skill upload screen or a way to create two independent chat sessions. Codex created the exact course SKILL.md, read its seven steps, and used them for the second response. No skill was uploaded or installed, and no invocation badge was shown. The four file checks above were checked with Codex. The real Chromium screenshot at `evidence/install.png` shows a clearly labelled local view of the saved simulation, not an upload confirmation. Its source is `evidence/install.html`.
+
+The skill was copied by Codex, not typed by me. This differs from the manual writing step in the handout and is disclosed in AI_USAGE.md.
 
 ---
 

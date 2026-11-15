@@ -1,6 +1,6 @@
 {
   "date": "2026-11-15",
-  "status": "prompts-prepared-awaiting-independent-sessions",
+  "status": "completed",
   "assistant": "OpenAI Codex",
   "model": "not displayed",
   "tool_sha256": "6edee1baca419901fb301056b9950e0650ea35bbe2a12f6f9e9bc7211a4f445a",
@@ -11,5 +11,37 @@
   },
   "expected_answers_supplied_to_sessions": false,
   "first_checker_s_fails": 9,
-  "checkpoint": "77abe4a"
+  "checkpoint": "77abe4a",
+  "fresh_chats": true,
+  "method": "Three independent Codex agent sessions, one per request, with fork_turns=none.",
+  "user_authorized_independent_sessions": true,
+  "model_overrides": false,
+  "parent_conversation_supplied": false,
+  "response_capture": "Saved the exact final text without JSON formatting changes or added prose.",
+  "sessions": [
+    {
+      "request": "R1",
+      "session": "/root/week09_r1",
+      "history": "none",
+      "prompt_file": "evidence/prompts/r1.txt",
+      "response_file": "calls/r1.json",
+      "response_sha256": "666c2e9a0231167e8f4af7dfab4d2608ef95dbdb936d27b9791e066e62de79e6"
+    },
+    {
+      "request": "R2",
+      "session": "/root/week09_r2",
+      "history": "none",
+      "prompt_file": "evidence/prompts/r2.txt",
+      "response_file": "calls/r2.json",
+      "response_sha256": "f5210e8dbdba0568062a1f423cd54c4772b6c8e89ed44c87e68c872e0a65b6d4"
+    },
+    {
+      "request": "R3",
+      "session": "/root/week09_r3",
+      "history": "none",
+      "prompt_file": "evidence/prompts/r3.txt",
+      "response_file": "calls/r3.txt",
+      "response_sha256": "51e22e61d2e27eb7d0677840ebc390bd30629871edf659bda0c63e66ad530ae2"
+    }
+  ]
 }

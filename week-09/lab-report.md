@@ -13,10 +13,12 @@ I followed the work and understand the tool contract. Codex carried out the file
 | --- | --- |
 | Assistant (frozen for the whole lab) | OpenAI Codex |
 | Exact model (or "not displayed") | not displayed |
-| Three fresh chats for R1, R2, R3? (yes / no) | pending |
+| Three fresh chats for R1, R2, R3? (yes / no) | yes |
 | Python version (`python --version`) | Python 3.14.4 |
 
 I started on week-09 from main at 9b1fdea. I saved the untouched files, ran the first checker before changing the definition, and made checkpoint 77abe4a. This week uses Python 3 with the standard library only. I did not run JavaScript or build an MCP server.
+
+R1, R2 and R3 each used a separate Codex session with no parent conversation. Each session received the exact saved prompt, the whole tool definition and only its own request. The same assistant and default model were used for all three, with no model override. The exact model version was not displayed. The session names and response hashes are recorded in evidence/experiment-manifest.json.
 
 ## 2. Your tool definition — a reason for every constraint
 
@@ -111,7 +113,7 @@ The tool description explains the unit, the one-day range, the read-only result 
 
 ## 3. The twelve calls — first run and final run
 
-My first actual run was on the untouched starter, saved as evidence/tool-starter.json. It gave 6 PASS, 17 FAIL and 7 ERROR overall. Among S01-S12, 9 failed because the empty properties object accepted every malformed call. The first completed definition passed all 12 cases; I did not add a deliberate mistake.
+My first actual run was on the untouched starter, saved as evidence/tool-starter.json. It gave 6 PASS, 17 FAIL and 7 ERROR overall. Among S01-S12, 9 failed because the empty properties object accepted every malformed call. The first completed definition passed all 12 cases.
 
 | Case | First run | Final run | What you changed |
 | --- | --- | --- | --- |
@@ -132,7 +134,31 @@ The raw runs are in evidence/01-first-checker.txt and evidence/02-schema-checker
 
 ## 4. Function calling — what the model wrote
 
-The three exact prompts are saved in evidence/prompts/. The replies and their review will be added after the independent sessions finish.
+The exact prompts are saved in evidence/prompts/r1.txt, r2.txt and r3.txt. Each reply below is the complete final response from its own fresh session. These are model-proposed calls under the exercise prompt. No real check_room server or JavaScript canBook function was executed; the availability decisions below follow from the acceptance criteria.
+
+### R1
+
+```text
+{"name":"check_room","arguments":{"start":600,"end":660,"now":540,"blocked":false,"bookings":[{"start":660,"end":720}]}}
+```
+
+The call matches R1. The model converted 9:00 to now = 540, 10:00 to start = 600, 11:00 to end = 660, and the existing 11:00-12:00 booking to 660-720. It kept blocked = false and added no extra field. F1-F3 pass. Under AC4, this endpoint contact is allowed, so canBook should answer Available.
+
+### R2
+
+```text
+{"name":"check_room","arguments":{"start":840,"end":990,"now":810,"blocked":true,"bookings":[]}}
+```
+
+The call matches R2. The model converted 13:30 to now = 810, 14:00 to start = 840 and 16:30 to end = 990. It kept blocked = true and bookings = []. F4-F6 pass. The model made the call rather than refusing it. The duration is 990 - 840 = 150 minutes, which breaks AC2, and the room is also blocked under AC3. The schema must accept this well-formed call; canBook should answer Unavailable.
+
+### R3
+
+```text
+What exact start and end times tomorrow, current time, room blocked status, and existing bookings should I use?
+```
+
+The model asked one short question and did not make a call. It requested the exact start and end, the current time, the blocked status and the existing bookings. It invented no clock values, no blocked value and no empty booking list. The phrase tomorrow afternoon gives no exact interval, and the tool has no date field. The client must also choose the day and use times and bookings from that same day before a real call. The reply refers to tomorrow but does not explain that day selection step, which is a small limit of this short answer. I saved only r3.txt; F7 passes.
 
 ## 5. What the schema cannot check
 
@@ -196,12 +222,56 @@ I am documenting these commands, not running them. The reset would move week-09 
 
 ## 8. Checker output
 
-The final complete checker output will be added after the calls and report are ready.
+Command, run from week-09/:
+
+```bash
+python3 tests/check_tool.py
+```
+
+Complete captured output, also saved in evidence/04-final-checker.txt:
+
+```text
+PASS  D1    tool/check_room.json exists and is valid JSON
+PASS  D2    has name, description and inputSchema
+PASS  D3    name is exactly "check_room"
+PASS  D4    description: 25+ words, says minutes, 1440, and that it does not save
+PASS  D5    inputSchema: an object with exactly the five fields, all required
+PASS  D6    inputSchema uses only the keywords listed in README section 5
+PASS  S01   the R1 call, valid -> accept
+PASS  S02   no existing bookings: bookings = [] -> accept
+PASS  S03   end as a string: "11:00" -> refuse
+PASS  S04   now missing -> refuse
+PASS  S05   an extra field: "room": "204" -> refuse
+PASS  S06   start below the day: -30 -> refuse
+PASS  S07   end beyond the day: 1500 -> refuse
+PASS  S08   a booking with no end: {start: 660} -> refuse
+PASS  S09   blocked as a string: "false" -> refuse
+PASS  S10   start not a whole minute: 600.5 -> refuse
+PASS  S11   end at the end of the day: 1440 -> accept
+PASS  S12   a booking as a pair: [660, 720] -> refuse
+PASS  F1    calls/r1.json: a call to check_room
+PASS  F2    calls/r1.json: arguments valid against your schema
+PASS  F3    calls/r1.json: arguments equal the expected ones (README section 5, Part 2)
+PASS  F4    calls/r2.json: a call to check_room
+PASS  F5    calls/r2.json: arguments valid against your schema
+PASS  F6    calls/r2.json: arguments equal the expected ones (README section 5, Part 2)
+PASS  F7    calls/r3: exactly one of r3.json (it called) or r3.txt (it asked), not empty
+PASS  L1    section 5 names at least two acceptance criteria (AC1-AC6) the schema cannot check
+PASS  L2    section 6: A1-A8 each have allow / ask / block and a reason of 5+ words
+PASS  L3    section 7 names the checkpoint commit (a SHA)
+PASS  L4    section 10: a conclusion of 80-150 words
+PASS  L5    AI_USAGE.md filled in (a tool row, and signed)
+
+SUMMARY: 30 PASS · 0 FAIL · 0 ERROR  (of 30 checks)
+Paste this whole output into lab-report.md section 8, and these three numbers into submission.yml.
+```
 
 ## 9. What still fails
 
-The lab is still in progress; this is not the final declaration of failures.
+None. The final checker has no FAIL or ERROR, so known_fails is []. The first starter run still shows the original 17 FAIL and 7 ERROR in evidence/01-first-checker.txt; those were fixed or completed during the lab, and the first results were kept.
+
+The checker confirms file shape and agreement with these fixed cases. It cannot prove that every future model reply will be correct or that a real client will enforce my permission choices.
 
 ## 10. Conclusion (80–150 words)
 
-I learned that a tool definition is a small contract between the model and the client, while canBook decides availability. My first schema run accepted nine bad calls, and S03 and S10 showed why time strings and fractions need explicit type checks. A valid call can still ask for a blocked room or a slot longer than 120 minutes, so the function must apply AC2 and AC3 after the schema check. The checkpoint and my A5-A8 choices also showed me that having a terminal or an MCP tool does not give an agent permission for every action. I understand these limits and can explain the schema, the evidence, and the recovery command without the assistant.
+I learned that the model writes a request, the schema checks its shape, and canBook decides whether the room is free. In R2, the model correctly sent end = 990 and blocked = true; the schema accepted the call, although the 150-minute slot breaks AC2 and maintenance breaks AC3. In R3, the model asked for missing times and room data, showing why a short question can be the right reply. My first run accepted nine bad calls, so S03 and S10 helped me understand why time strings and fractions need type checks. I understand these limits, my A5-A8 decisions, and the checkpoint command, and I can explain and defend them without the assistant.

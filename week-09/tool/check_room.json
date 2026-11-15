@@ -1,9 +1,65 @@
 {
-  "name": "",
-  "description": "",
+  "name": "check_room",
+  "description": "Check whether one room is free for a time slot on one day. Give all times as whole minutes since midnight in the range 0-1440; 1440 means 24:00. Supply the current time, the blocked status, and the known bookings for that same day. This tool only checks availability and does not save, create, or change any booking. The function checks time order, the 120-minute limit, blocked rooms, and overlaps; touching endpoints are allowed. Ask for missing information instead of guessing, and do not invent a date field.",
   "inputSchema": {
     "type": "object",
-    "properties": {},
-    "required": []
+    "properties": {
+      "start": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Requested start time in whole minutes since midnight on the selected day."
+      },
+      "end": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Requested end time in whole minutes since midnight; 1440 is the end of that day."
+      },
+      "now": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Current time for the selected day in whole minutes since midnight; do not guess it."
+      },
+      "blocked": {
+        "type": "boolean",
+        "description": "True when the room is blocked; false when it is not blocked."
+      },
+      "bookings": {
+        "type": "array",
+        "description": "Existing bookings for this room on the selected day. Use an empty array only when there are no bookings.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1440,
+              "description": "Existing booking start time in whole minutes since midnight."
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1440,
+              "description": "Existing booking end time in whole minutes since midnight; 1440 is allowed."
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "start",
+      "end",
+      "now",
+      "blocked",
+      "bookings"
+    ],
+    "additionalProperties": false
   }
 }

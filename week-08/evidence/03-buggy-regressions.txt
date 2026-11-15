@@ -1,0 +1,143 @@
+8:26:57 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:26:57 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ × src/booking.test.ts > canBook > T01 AC4: touching after is allowed 5ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected 0ms
+ × src/booking.test.ts > canBook > T08 AC4: touching before is allowed 0ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap 0ms
+ × src/booking.test.ts > canBook > AC5: an available check does not change existing bookings 0ms
+   → expected false to be true // Object.is equality
+ ✓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440 0ms
+ ✓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed 0ms
+ × src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available 0ms
+   → expected false to be true // Object.is equality
+ × src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 3ms
+   → expected [ { start: 600, end: 660 }, …(2) ] to deeply equal [ { start: 600, end: 660 }, …(1) ]
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:12:61
+     10| describe('canBook', () => {
+     11|   test('T01 AC4: touching after is allowed', () => {
+     12|     expect(canBook({ start: 660, end: 720, ...fixture() })).toBe(true);
+       |                                                             ^
+     13|   });
+     14|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/booking.test.ts > canBook > T08 AC4: touching before is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:40:61
+     38|
+     39|   test('T08 AC4: touching before is allowed', () => {
+     40|     expect(canBook({ start: 570, end: 600, ...fixture() })).toBe(true);
+       |                                                             ^
+     41|   });
+     42|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:70:83
+     68|     const bookings = [{ start: 600, end: 660 }];
+     69|     const before = structuredClone(bookings);
+     70|     expect(canBook({ start: 660, end: 720, now: 540, blocked: false, b…
+       |                                                                                   ^
+     71|     expect(bookings).toEqual(before);
+     72|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:84:83
+     82|   test('BUG-A AC4: the exact gap between two bookings is available', (…
+     83|     const bookings = [{ start: 600, end: 660 }, { start: 720, end: 780…
+     84|     expect(canBook({ start: 660, end: 720, now: 540, blocked: false, b…
+       |                                                                                   ^
+     85|   });
+     86|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged
+AssertionError: expected [ { start: 600, end: 660 }, …(2) ] to deeply equal [ { start: 600, end: 660 }, …(1) ]
+
+- Expected
++ Received
+
+@@ -5,6 +5,10 @@
+    },
+    {
+      "end": 900,
+      "start": 840,
+    },
++   {
++     "end": 810,
++     "start": 765,
++   },
+  ]
+
+ ❯ src/booking.test.ts:91:22
+     89|     const before = structuredClone(bookings);
+     90|     expect(canBook({ start: 765, end: 810, now: 540, blocked: false, b…
+     91|     expect(bookings).toEqual(before);
+       |                      ^
+     92|   });
+     93| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 14 passed (19)
+   Start at  08:26:57
+   Duration  138ms (transform 19ms, setup 0ms, import 29ms, tests 12ms, environment 0ms)
+

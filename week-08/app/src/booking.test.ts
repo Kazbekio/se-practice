@@ -78,4 +78,16 @@ describe('canBook', () => {
   test('X2 AC1: a one-minute interval after now is allowed', () => {
     expect(canBook({ start: 541, end: 542, now: 540, blocked: false, bookings: [] })).toBe(true);
   });
+
+  test('BUG-A AC4: the exact gap between two bookings is available', () => {
+    const bookings = [{ start: 600, end: 660 }, { start: 720, end: 780 }];
+    expect(canBook({ start: 660, end: 720, now: 540, blocked: false, bookings })).toBe(true);
+  });
+
+  test('BUG-B AC5: a separate afternoon slot leaves bookings unchanged', () => {
+    const bookings = [{ start: 600, end: 660 }, { start: 840, end: 900 }];
+    const before = structuredClone(bookings);
+    expect(canBook({ start: 765, end: 810, now: 540, blocked: false, bookings })).toBe(true);
+    expect(bookings).toEqual(before);
+  });
 });

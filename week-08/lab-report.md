@@ -323,8 +323,8 @@ One row per defect. At least **BUG-A and BUG-B**. "Suspected cause" is your hypo
 
 | Defect | Test ID | Input | Expected | Actual | Suspected cause (line and why) |
 | --- | --- | --- | --- | --- | --- |
-| BUG-A | T01, T08, AC5; new BUG-A | now 540; bookings 600–660 and 720–780; request 660–720 | true: it touches both bookings | false | app/src/booking.ts:27 uses <= and >=. Equality means a shared endpoint is treated as an overlap. |
-| BUG-B | new BUG-B; AC5 after the BUG-A fix | now 540; bookings 600–660 and 840–900; request 765–810 | true and the original two bookings unchanged | true, but a third booking is added | app/src/booking.ts:30 calls bookings.push on the caller's array. The new request touches nothing, so the loop cannot hide this line. |
+| BUG-A | T01, T08, AC5; new BUG-A | now 540; bookings 600–660 and 720–780; request 660–720 | true: it touches both bookings | false | app/src/booking.ts:26 uses <= and >=. Equality means a shared endpoint is treated as an overlap. |
+| BUG-B | new BUG-B; AC5 after the BUG-A fix | now 540; bookings 600–660 and 840–900; request 765–810 | true and the original two bookings unchanged | true, but a third booking is added | app/src/booking.ts:29 calls bookings.push on the caller's array. The new request touches nothing, so the loop cannot hide this line. |
 
 ---
 

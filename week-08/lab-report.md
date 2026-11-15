@@ -366,38 +366,153 @@ The skill was copied by Codex, not typed by me. This differs from the manual wri
 
 ## 5. Task 4 — without the skill
 
-A **fresh chat, with no skill enabled**. Paste exactly what you sent: the deck's question, then
-the same input you will use in section 6 (AC1–AC6, the failing test output, the code of
-`canBook`):
+This is the plain response in a paired demonstration by the current Codex assistant. No bug-detector instructions were applied for this response. It was not an independent fresh chat. The saved question and input are below:
 
 ```text
-(paste here)
+Find the root cause of the failed room-booking test. Propose minimal patch and regression test. Do not edit code.
+
+Acceptance criteria:
+AC1 Reject start >= end and requests in the past.
+AC2 Enforce the maximum allowed duration (120 minutes).
+AC3 Reject a blocked room.
+AC4 Reject overlaps; allow bookings that only touch at endpoints.
+AC5 Return Available / Unavailable without changing booking data.
+AC6 Preserve clear UI feedback on desktop and mobile.
+
+Observed failure (from the Week 07 suite on the provided code):
+ FAIL  src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:12:61
+     10| describe('canBook', () => {
+     11|   test('T01 AC4: touching after is allowed', () => {
+     12|     expect(canBook({ start: 660, end: 720, ...fixture() })).toBe(true);
+       |                                                             ^
+     13|   });
+     14|
+
+
+Provided code:
+export function canBook({ start, end, now, blocked, bookings }: {
+  start: number;
+  end: number;
+  now: number;
+  blocked: boolean;
+  bookings: { start: number; end: number }[];
+}): boolean {
+  if (!(0 <= start && start < end && end <= 1440)) return false;
+  if (!(start > now)) return false;
+  if (end - start > 120) return false;
+  if (blocked) return false;
+  for (const b of bookings) {
+    if (start <= b.end && end >= b.start) return false;
+  }
+  // keep the room's list current with the slot that was just found free
+  bookings.push({ start, end });
+  return true;
+}
 ```
 
 **The assistant's answer, pasted unedited:**
 
 ```text
-(paste here)
+T01 requests 660-720 after a booking at 600-660. AC4 says this must be Available because the times only touch. The overlap line uses start <= b.end and end >= b.start. Both comparisons are true here, so the function returns false at the shared endpoint.
+
+The minimal BUG-A patch is one line:
+- if (start <= b.end && end >= b.start) return false;
++ if (start < b.end && end > b.start) return false;
+
+There is also a second problem in the code: bookings.push({ start, end }) adds a new item to the caller's array. This breaks AC5. Delete that one line for BUG-B. The T01 failure does not reach the push, so that failure alone does not prove the mutation happened.
+
+For BUG-A, use now 540, blocked false, bookings 600-660 and 720-780, and request 660-720. Assert that the result is exactly true. This checks both touching sides in one request.
+
+For BUG-B, use fresh bookings 600-660 and 840-900, copy them before the call, and request 765-810 with now 540 and blocked false. Assert true, then compare bookings with the copy. This request touches nothing, so BUG-A cannot stop the call before the push.
+
+Run both tests on the broken function first. After each small fix, rerun its test and the full suite, including T09-T12 for real overlaps. I have not edited code or run tests for this diagnosis.
 ```
 
 ---
 
 ## 6. Task 5 — with the skill
 
-**Another fresh chat, with `bug-detector` enabled.** Send exactly the same input as in section 5.
-Only the question changes, to the deck's skill question:
+This is a prompt-only simulation in the same Codex session. The instructions from `skills/bug-detector/SKILL.md` were read before the response. It was not a second independent fresh chat. The input after the question is byte-identical to section 5:
 
 ```text
-(paste here)
+Use the bug-detector skill to diagnose the failed room-booking test.
+
+Acceptance criteria:
+AC1 Reject start >= end and requests in the past.
+AC2 Enforce the maximum allowed duration (120 minutes).
+AC3 Reject a blocked room.
+AC4 Reject overlaps; allow bookings that only touch at endpoints.
+AC5 Return Available / Unavailable without changing booking data.
+AC6 Preserve clear UI feedback on desktop and mobile.
+
+Observed failure (from the Week 07 suite on the provided code):
+ FAIL  src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/booking.test.ts:12:61
+     10| describe('canBook', () => {
+     11|   test('T01 AC4: touching after is allowed', () => {
+     12|     expect(canBook({ start: 660, end: 720, ...fixture() })).toBe(true);
+       |                                                             ^
+     13|   });
+     14|
+
+
+Provided code:
+export function canBook({ start, end, now, blocked, bookings }: {
+  start: number;
+  end: number;
+  now: number;
+  blocked: boolean;
+  bookings: { start: number; end: number }[];
+}): boolean {
+  if (!(0 <= start && start < end && end <= 1440)) return false;
+  if (!(start > now)) return false;
+  if (end - start > 120) return false;
+  if (blocked) return false;
+  for (const b of bookings) {
+    if (start <= b.end && end >= b.start) return false;
+  }
+  // keep the room's list current with the slot that was just found free
+  bookings.push({ start, end });
+  return true;
+}
 ```
 
 **The assistant's answer, pasted unedited:**
 
 ```text
-(paste here)
+I am using the bug-detector procedure as a prompt-only simulation.
+
+1. Read the criteria, code and failure. T01 expects true for 660-720 after 600-660. AC4 allows this endpoint contact. AC5 also requires the input array to stay unchanged.
+2. Reproduce the decision by hand. With start 660 and b.end 660, start <= b.end is true. With end 720 and b.start 600, end >= b.start is true. The loop therefore returns false. I have not run code in this diagnosis.
+3. Locate the relevant lines. The overlap condition includes equality. Later, bookings.push({ start, end }) changes the original array.
+4. Separate the evidence. T01 confirms the wrong endpoint decision. The push is direct code evidence for a separate AC5 defect, but T01 returns before it. A separate non-touching test is needed to observe the array change.
+
+Defect | Evidence | Root cause | Fix | Test
+BUG-A | T01 returns false for endpoint contact | The overlap condition uses <= and >= | Replace that line with if (start < b.end && end > b.start) return false; | With now 540, blocked false, bookings 600-660 and 720-780, request 660-720; expect exactly true
+BUG-B | The code calls push on bookings; this branch is not reached by T01 | The availability check also adds a booking | Delete only bookings.push({ start, end }); | Copy fresh bookings 600-660 and 840-900; request 765-810 with now 540 and blocked false; expect true, then compare bookings with the copy
+
+5. These are two separate one-line patches. Do not rename variables or rewrite the function. I have not edited any file.
+6. Run the two regression tests on the buggy code first. After fixing BUG-A, run its test and the full suite. BUG-B should still fail. After deleting the push, run its test and the full suite. T09-T12 should still reject actual overlaps. Passing status must come from the terminal, not this answer.
 ```
 
-Did the environment show that the skill was invoked? yes / no / not shown
+Did the environment show that the skill was invoked? **not shown**. There was no skill badge. The response states that it follows the prompt-only procedure.
 
 ---
 
@@ -408,15 +523,13 @@ tests showed. Write a short verdict in each cell, and give a reason where they d
 
 | Criterion | No skill | With skill |
 | --- | --- | --- |
-| Correct root cause | | |
-| Reproducible test | | |
-| Minimal proposed patch | | |
-| Unsupported claims | | |
-| Clarity of explanation | | |
+| Correct root cause | Both bugs: inclusive comparisons break AC4, and push breaks AC5. The T01 trace supports BUG-A. | Both bugs, with the same correct causes. The answer separates the T01 observation from code evidence for BUG-B. |
+| Reproducible test | Gives fixed inputs for the two-sided gap and a separate afternoon slot; asks for true and an array comparison. | Gives the same fixed inputs and exact checks. Both match the tests that failed in section 2.3. |
+| Minimal proposed patch | Change the overlap line and delete the push line. These match the two small patches in section 8. | The same two one-line changes. It also says to keep the rest of the function unchanged. |
+| Unsupported claims | None about passing tests. It says it did not run them in this diagnosis and explains that T01 does not prove mutation. | None about passing tests. The hand calculation is valid, and it asks for terminal evidence. |
+| Clarity of explanation | Short paragraphs explain the cause and the two tests clearly. | The numbered steps and defect table are easier to scan, but add no new defect or test coverage. |
 
-**Which bugs did each answer find?** (BUG-A, BUG-B, both, neither)
-
--
+**Which bugs did each answer find?** Both answers found BUG-A and BUG-B. My verdict is `no-difference` for correctness and test quality. The skill made the answer more structured. Since both responses share one session and earlier context, this demonstration cannot measure the skill's independent effect.
 
 ---
 
@@ -430,8 +543,152 @@ Rerun the test that was failing, then the full suite.
 The change as a diff (`git diff`, or the old and the new line), then the real run:
 
 ```text
-(paste here)
+diff --git a/week-08/app/src/booking.ts b/week-08/app/src/booking.ts
+index 8d09cc2..eb25f4b 100644
+--- a/week-08/app/src/booking.ts
++++ b/week-08/app/src/booking.ts
+@@ -23,7 +23,7 @@ export function canBook({ start, end, now, blocked, bookings }: {
+   if (end - start > 120) return false;
+   if (blocked) return false;
+   for (const b of bookings) {
+-    if (start <= b.end && end >= b.start) return false;
++    if (start < b.end && end > b.start) return false;
+   }
+   // keep the room's list current with the slot that was just found free
+   bookings.push({ start, end });
 ```
+
+Codex applied the proposed one-line patch. I followed the comparison and understand that strict inequalities allow equal endpoints while rejecting real overlaps. The targeted run uses `-t BUG-A`, so the other tests are filtered out in that run:
+
+```text
+8:29:37 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:29:37 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ ↓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed
+ ↓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected
+ ↓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected
+ ↓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected
+ ↓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected
+ ↓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed
+ ↓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected
+ ↓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed
+ ↓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected
+ ↓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected
+ ↓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected
+ ↓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected
+ ↓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected
+ ↓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap
+ ↓ src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+ ↓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440
+ ↓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed
+ ✓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available 1ms
+ ↓ src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 18 skipped (19)
+   Start at  08:29:37
+   Duration  136ms (transform 21ms, setup 0ms, import 32ms, tests 3ms, environment 0ms)
+```
+
+Full suite after only BUG-A was fixed:
+
+```text
+8:29:38 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+8:29:38 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-08/app
+
+ ✓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed 1ms
+ ✓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap 0ms
+ × src/booking.test.ts > canBook > AC5: an available check does not change existing bookings 6ms
+   → expected [ { start: 600, end: 660 }, …(1) ] to deeply equal [ { start: 600, end: 660 } ]
+ ✓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440 0ms
+ ✓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed 0ms
+ ✓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available 0ms
+ × src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 1ms
+   → expected [ { start: 600, end: 660 }, …(2) ] to deeply equal [ { start: 600, end: 660 }, …(1) ]
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking.test.ts > canBook > AC5: an available check does not change existing bookings
+AssertionError: expected [ { start: 600, end: 660 }, …(1) ] to deeply equal [ { start: 600, end: 660 } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "end": 660,
+      "start": 600,
+    },
++   {
++     "end": 720,
++     "start": 660,
++   },
+  ]
+
+ ❯ src/booking.test.ts:71:22
+     69|     const before = structuredClone(bookings);
+     70|     expect(canBook({ start: 660, end: 720, now: 540, blocked: false, b…
+     71|     expect(bookings).toEqual(before);
+       |                      ^
+     72|   });
+     73|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged
+AssertionError: expected [ { start: 600, end: 660 }, …(2) ] to deeply equal [ { start: 600, end: 660 }, …(1) ]
+
+- Expected
++ Received
+
+@@ -5,6 +5,10 @@
+    },
+    {
+      "end": 900,
+      "start": 840,
+    },
++   {
++     "end": 810,
++     "start": 765,
++   },
+  ]
+
+ ❯ src/booking.test.ts:91:22
+     89|     const before = structuredClone(bookings);
+     90|     expect(canBook({ start: 765, end: 810, now: 540, blocked: false, b…
+     91|     expect(bookings).toEqual(before);
+       |                      ^
+     92|   });
+     93| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  08:29:38
+   Duration  139ms (transform 20ms, setup 0ms, import 30ms, tests 12ms, environment 0ms)
+```
+
+BUG-A, T01 and T08 now pass. AC5 now reaches its array comparison and fails because of BUG-B. The dedicated BUG-B test also still fails. This is the expected intermediate state, not a final green run.
 
 ### 8.2 The BUG-B patch and the final run
 

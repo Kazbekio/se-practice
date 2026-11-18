@@ -1,0 +1,7 @@
+app/src/App.tsx — page, two inline rooms, form state, check(), toMinutes(), fmt(), room selector and status.
+app/src/booking.ts — pure canBook plus Booking and BookingRequest types; AC1-AC5 already repaired in Week 08.
+app/src/booking.test.ts — 19 fixed-clock Vitest tests, including endpoint contact and non-mutation regressions.
+app/src/index.css — responsive baseline page styling.
+app/src/main.tsx — mounts App and imports CSS.
+app/package.json + package-lock.json — React, TypeScript, Vite and Vitest; build and test commands.
+sis-04/tests/ — supplied structural checker and declaration validator; do not edit.

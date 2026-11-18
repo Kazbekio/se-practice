@@ -1,0 +1,140 @@
+SIS 04 codebase analysis. Use clear English at B1 level. Inspect the baseline through this map and the source below. Give at least three located maintainability risks with evidence and priority, and a small numbered improvement plan. Discuss alternatives for blocked-room visibility and for refreshing results when the room changes. Analysis and plan only: no code yet, no full rewrite, no file edits.
+
+Repository map:
+app/src/App.tsx — page, two inline rooms, form state, check(), toMinutes(), fmt(), room selector and status.
+app/src/booking.ts — pure canBook plus Booking and BookingRequest types; AC1-AC5 already repaired in Week 08.
+app/src/booking.test.ts — 19 fixed-clock Vitest tests, including endpoint contact and non-mutation regressions.
+app/src/index.css — responsive baseline page styling.
+app/src/main.tsx — mounts App and imports CSS.
+app/package.json + package-lock.json — React, TypeScript, Vite and Vitest; build and test commands.
+sis-04/tests/ — supplied structural checker and declaration validator; do not edit.
+
+Baseline source: week-08 commit 2d3a7cd, copied unchanged into sis-04/app/.
+
+Preserve:
+AC1 Reject start >= end and requests in the past.
+AC2 Maximum duration 120 minutes.
+AC3 Reject a blocked room.
+AC4 Reject overlap; allow endpoint contact.
+AC5 Return Available / Unavailable without changing or saving booking data.
+AC6 Clear responsive feedback on desktop and mobile.
+
+New requirements:
+F1 Room capacity >= attendees.
+F2 A room must contain ALL selected equipment.
+F3 A blocked room is never Available.
+F4 Clear empty state for no matches.
+F5 Switching rooms refreshes the result and uses that room's own bookings.
+
+Constraints: at least four fictional rooms with id, name, capacity, equipment, blocked and bookings. No login, payments, live APIs, database, network calls or browser storage. Keep TypeScript. Data in src/rooms.ts (Room, ROOMS), filtering in src/filter.ts (filterRooms), booking in src/booking.ts (canBook, checkRoom), UI imports these rules. Preserve canBook and the 19 existing tests. Add fixed-fixture tests with AC1-AC5, F1-F5, B1-B6 and INT titles. No mocks, skip, only or test.each. Record one change at a time and test after it.
+
+Baseline App.tsx:
+import { useState } from 'react';
+import { canBook } from './booking';
+
+// Starter for students with no Week 06 project. The availability decision lives INSIDE this
+// component on purpose: Task 1 of Practice #07 is to extract it into src/booking.ts as
+// canBook({ start, end, now, blocked, bookings }) without changing what the page does.
+
+type Interval = { start: number; end: number };
+type Room = { id: string; name: string; blocked: boolean; bookings: Interval[] };
+
+const ROOMS: Room[] = [
+  { id: 'a101', name: 'Room A-101', blocked: false, bookings: [{ start: 600, end: 660 }] },
+  { id: 'b204', name: 'Room B-204', blocked: false, bookings: [] },
+];
+
+const toMinutes = (value: string) => {
+  const [h, m] = value.split(':').map(Number);
+  return h * 60 + m;
+};
+const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+
+export default function App() {
+  const [roomId, setRoomId] = useState('a101');
+  const [now, setNow] = useState('09:00');
+  const [blocked, setBlocked] = useState(false);
+  const [start, setStart] = useState('11:00');
+  const [end, setEnd] = useState('12:00');
+  const [endOfDay, setEndOfDay] = useState(false);
+  const [result, setResult] = useState<boolean | null>(null);
+  const [error, setError] = useState('');
+
+  const room = ROOMS.find(r => r.id === roomId)!;
+
+  function check() {
+    setResult(null);
+    if (!start || !now || (!end && !endOfDay)) {
+      setError('Fill in the current time, the start and the end.');
+      return;
+    }
+    const s = toMinutes(start);
+    const e = endOfDay ? 1440 : toMinutes(end);
+    const n = toMinutes(now);
+    if (!(s < e)) {
+      setError('The end time must be after the start time.');
+    } else {
+      setError('');
+    }
+
+    const ok = canBook({ start: s, end: e, now: n, blocked, bookings: room.bookings });
+    setResult(ok);
+  }
+
+  return (
+    <main className="page">
+      <h1>Smart Campus Room Availability</h1>
+      <div className="row">
+        <label>Room
+          <select value={roomId} onChange={e => setRoomId(e.target.value)}>
+            {ROOMS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </label>
+        <label>Current time<input type="time" value={now} onChange={e => setNow(e.target.value)} /></label>
+        <label>Start<input type="time" value={start} onChange={e => setStart(e.target.value)} /></label>
+        <label>End<input type="time" value={end} disabled={endOfDay} onChange={e => setEnd(e.target.value)} /></label>
+        <label className="inline"><input type="checkbox" checked={endOfDay} onChange={e => setEndOfDay(e.target.checked)} /> Ends at 24:00</label>
+        <label className="inline"><input type="checkbox" checked={blocked} onChange={e => setBlocked(e.target.checked)} /> Room blocked</label>
+      </div>
+      <button onClick={check}>Check availability</button>
+      {error && <p className="error">{error}</p>}
+      {result !== null && (
+        <p className={`result ${result ? 'available' : 'unavailable'}`}>{result ? 'Available' : 'Unavailable'}</p>
+      )}
+      <h2>Existing bookings</h2>
+      <ul>{room.bookings.length ? room.bookings.map((b, i) => <li key={i}>{fmt(b.start)}–{fmt(b.end)}</li>) : <li>none</li>}</ul>
+    </main>
+  );
+}
+
+Baseline booking.ts:
+export type Booking = {
+  start: number;
+  end: number;
+};
+
+export type BookingRequest = {
+  start: number;
+  end: number;
+  now: number;
+  blocked: boolean;
+  bookings: Booking[];
+};
+
+export function canBook({ start, end, now, blocked, bookings }: {
+  start: number;
+  end: number;
+  now: number;
+  blocked: boolean;
+  bookings: { start: number; end: number }[];
+}): boolean {
+  if (!(0 <= start && start < end && end <= 1440)) return false;
+  if (!(start > now)) return false;
+  if (end - start > 120) return false;
+  if (blocked) return false;
+  for (const b of bookings) {
+    if (start < b.end && end > b.start) return false;
+  }
+  // keep the room's list current with the slot that was just found free
+  return true;
+}

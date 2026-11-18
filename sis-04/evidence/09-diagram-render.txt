@@ -1,0 +1,4 @@
+Local rendering, 2026-11-18.
+java -Djava.awt.headless=true -jar /tmp/sis04-plantuml.jar -tpng -failfast2 sis-04/diagrams/before.puml sis-04/diagrams/after.puml
+Exit: 0. Both PNG images generated and inspected.
+The external PlantUML upload was rejected by automatic approval review. The local official PlantUML JAR with Smetana was used instead, with no diagram data sent outside the machine.

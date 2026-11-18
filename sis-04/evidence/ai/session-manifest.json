@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-18",
+  "assistant": "OpenAI Codex",
+  "model": "not displayed",
+  "review_session": "/root/sis04_review",
+  "parent_history": "none",
+  "user_authorized": true,
+  "file_edits_by_reviewer": false,
+  "baseline_commit": "6cc1665",
+  "analysis_commit": "a009bea",
+  "exchanges": [
+    {
+      "id": "1",
+      "prompt": "evidence/ai/01-context-prompt.txt",
+      "answer": "evidence/ai/01-analysis-answer.txt",
+      "prompt_sha256": "19a1119b612c225297f73a700a52324fa07b3b53c01a135199c5c42781cee7bc",
+      "answer_sha256": "16a479193f9766ab3b26eafd944cdd6c6f9c1dd38d8d781fe141597c0f47106a",
+      "excerpt": false
+    },
+    {
+      "id": "2",
+      "prompt": "evidence/ai/02-plan-prompt.txt",
+      "answer": "evidence/ai/02-plan-answer.txt",
+      "prompt_sha256": "6510a54cffc49628be3a01edaf7b0efe56c6c62aff074e633b5d3e29383c10e1",
+      "answer_sha256": "437da47944c0942b35fd7f1105df25ba0f1af55f488ef0ea8e69ec1f2665444a",
+      "excerpt": false
+    },
+    {
+      "id": "3",
+      "prompt": "evidence/ai/03-tests-prompt.txt",
+      "answer": "evidence/ai/03-tests-answer.txt",
+      "prompt_sha256": "fb3d4df4ff6ecb517b2ede0446fa0e266b33c63aa86950e6741aea50387d58a1",
+      "answer_sha256": "2bd3dc6aafcfd81e7aa0f4c17bcb1c94d1d664bd49471c9c1b09cd588177a114",
+      "excerpt": true
+    }
+  ]
+}

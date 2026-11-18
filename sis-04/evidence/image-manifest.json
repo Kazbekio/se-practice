@@ -1,0 +1,47 @@
+[
+  {
+    "file": "filter-match.png",
+    "size": [
+      1440,
+      1116
+    ],
+    "bytes": 121198,
+    "sha256": "e4a6322b8b103f066d02ce48576d81cc1d72d1b3b0384dce6b7c12e1f481e1a6"
+  },
+  {
+    "file": "filter-empty.png",
+    "size": [
+      1440,
+      1116
+    ],
+    "bytes": 113888,
+    "sha256": "5e22d53ebcbdbdabbe03b92dd50c70cdc6febcce1a82e180639cf64837a13b2c"
+  },
+  {
+    "file": "switch-a.png",
+    "size": [
+      1440,
+      1185
+    ],
+    "bytes": 146787,
+    "sha256": "fbc0affe806c1201d2614346f63c1f9c21dfbf3d816c6f2640f75f7efaaf28b8"
+  },
+  {
+    "file": "switch-b.png",
+    "size": [
+      1440,
+      1168
+    ],
+    "bytes": 144988,
+    "sha256": "8c504713893784abbb1c9aac625567f6acefd1f098a202551113fb6d5516fde2"
+  },
+  {
+    "file": "narrow.png",
+    "size": [
+      390,
+      2678
+    ],
+    "bytes": 140299,
+    "sha256": "eafa31aee67ff2087c61508adc27691d591d099492bdd2c980680e1e63972722"
+  }
+]

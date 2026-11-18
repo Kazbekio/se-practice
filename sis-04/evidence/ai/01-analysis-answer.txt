@@ -1,0 +1,31 @@
+The main risks are in `App.tsx`. The pure `canBook` function already supports AC1–AC5, so keep its behaviour and all 19 existing tests.
+
+| Priority | Location | Evidence and risk |
+|---|---|---|
+| High | [App.tsx:25](/home/nqmvl/se-practice/sis-04/app/src/App.tsx:25), line 49 | The check uses a separate `blocked` checkbox. It ignores `room.blocked`. A blocked room could therefore return Available when more rooms are added. This breaks F3. |
+| High | [App.tsx:58](/home/nqmvl/se-practice/sis-04/app/src/App.tsx:58) | Changing rooms updates only `roomId`. The stored result remains. For example, check A-101 at 10:00–11:00, then select B-204: the old Unavailable result remains, although B-204 has no bookings. This breaks F5. |
+| Medium | [App.tsx:9](/home/nqmvl/se-practice/sis-04/app/src/App.tsx:9) | Room types and data live inside the page. There are only two rooms, without capacity or equipment. Adding F1 and F2 here would mix room data, rules and display code. |
+| Medium | [App.tsx:32](/home/nqmvl/se-practice/sis-04/app/src/App.tsx:32) | The `!` assumes the selected room always exists. Filtering can remove that room or return no rooms. Later access to `room.bookings` could then crash the page instead of showing F4 feedback. |
+| Low | [booking.ts:6](/home/nqmvl/se-practice/sis-04/app/src/booking.ts:6), line 14 | `BookingRequest` exists, but `canBook` repeats its fields in another type. These definitions could become different later. The comment at line 28 also suggests saving a booking, although AC5 forbids that. |
+
+For blocked rooms, there are two reasonable choices:
+
+- **Show them with a “Blocked” label.** Users can understand why a room is unavailable. This is my recommendation. Capacity and equipment still control matching; `checkRoom` always rejects blocked rooms.
+- **Hide them.** This gives users fewer choices, but hides useful information. Explain this choice in the report and keep the blocked check inside `checkRoom`.
+
+For room changes, there are also two choices:
+
+- **Clear the result and ask the user to check again.** This prevents an old result, but adds another click.
+- **Refresh automatically after the first check.** This fits F5 better. Use the new room’s ID and bookings with the same times. Do not update `roomId` and then immediately read the old state. If a time input changes, clear or refresh the result too.
+
+I recommend this small plan:
+
+1. Record the real baseline test output. Move room data into `rooms.ts`, with `Room` and at least four fictional rooms containing every required field. Run the original tests.
+2. Add fixed-fixture tests for F1, F2, F4, B5 and B6. Implement `filterRooms`: capacity must be at least attendees, and every selected equipment item must exist.
+3. Add `checkRoom` in `booking.ts`. It must find the selected room and call unchanged `canBook` with that room’s blocked status and bookings. Return false for unknown IDs. Add F3, F5, B1–B4 and INT tests, plus a non-mutation check.
+4. Connect the page to the imported data and rules. Add attendee and equipment controls, a safe room selection, and a clear no-match message.
+5. Add automatic room-result refresh and the chosen blocked-room display. Check feedback and layout on desktop and mobile, then run the full tests and build.
+
+For each code change, write the new test first where appropriate, run all tests, review the diff, and record the real result. Keep fixtures local to tests; use no mocks, skipped tests, `.only`, or `test.each`. Leave the supplied checker files unchanged.
+
+No files were changed or tests run during this review.

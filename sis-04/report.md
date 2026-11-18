@@ -1,8 +1,31 @@
 # SIS #04 — Report: Evolving the Smart Campus Room Availability Checker
 
-<!-- The ONLY file you write prose in. Keep every numbered heading (## 1. … ## 10.), every
-     ### sub-heading and every **Label:** word — the checker finds your answers by them.
-     Replace every "(write here)" and "6:43:50 PM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+**Name:** Shynbulat Kazbek
+
+**Student ID:** 24B032123
+
+**Group/session:** Monday 16:00 - 19:00 (from Week 07 report)
+
+**Date:** 2026-11-18
+
+## 1. Setup and starting point
+
+| Item | Value |
+| --- | --- |
+| Assistant (tool) | OpenAI Codex |
+| Assistant model | not displayed |
+| Starting point | week-08 |
+| Baseline commit | 6cc1665 |
+| Language (ts or js) | ts |
+| Vitest version | 4.1.12 |
+| Where I ran the tests | my computer, through the Codex terminal |
+
+The baseline comes from week-08 at 2d3a7cd. All ten app files were compared byte-for-byte before the first commit. The group/session value comes from the earlier Week 07 report. Codex carried out the edits and tests while I followed the work.
+
+### 1.1 Baseline run
+
+```text
+6:43:50 PM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
 6:43:50 PM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
 Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
 
@@ -31,94 +54,192 @@ Both esbuild and oxc options were set. oxc options will be used and esbuild opti
  Test Files  1 passed (1)
       Tests  19 passed (19)
    Start at  18:43:50
-   Duration  131ms (transform 21ms, setup 0ms, import 31ms, tests 6ms, environment 0ms)". Delete these <!-- --> comments if you like. -->
+   Duration  131ms (transform 21ms, setup 0ms, import 31ms, tests 6ms, environment 0ms)
 
-**Name:** Shynbulat Kazbek
-
-**Student ID:** 24B032123
-
-**Group/session:** Monday 16:00 - 19:00 (already recorded in Week 07)
-
-**Date:** 2026-11-18
-
-## 1. Setup and starting point
-
-<!-- Model: the exact model with its version, as the tool shows it ("ChatGPT" is a tool, not a
-     model). If the tool does not show it, write: not displayed
-     Starting point: week-08 | week-07 | sis-03 | starter   (README section 3)
-     Baseline commit: the commit that brings your starting point into sis-04/app/ UNCHANGED —
-     git rev-parse --short HEAD right after that commit. It is your "initial version". -->
-
-| Item | Value |
-| --- | --- |
-| Assistant (tool) | OpenAI Codex |
-| Assistant model | not displayed |
-| Starting point | week-08 |
-| Baseline commit | (write here) |
-| Language (ts or js) | ts |
-| Vitest version | 4.1.12 |
-| Where I ran the tests | my computer, using the Codex terminal |
-
-### 1.1 Baseline run
-
-<!-- Before you change anything: run the tests of your starting point inside app/ and paste the
-     REAL output. No tests yet (starter, sis-03)? Paste the run anyway: Vitest prints
-     "No test files found". That is your honest "original" number, 0/0. -->
-
-```text
-(paste here)
 ```
 
 ## 2. Context for the assistant
 
+
+
 ### 2.1 Repository map
 
-<!-- The concise map you gave the assistant: the files that matter and one line each on what
-     they do. A tree is fine:  src/App.tsx — the page, holds the rooms and the form … -->
-
 ```text
-(paste here)
+app/src/App.tsx — page, two inline rooms, form state, check(), toMinutes(), fmt(), room selector and status.
+app/src/booking.ts — pure canBook plus Booking and BookingRequest types; AC1-AC5 already repaired in Week 08.
+app/src/booking.test.ts — 19 fixed-clock Vitest tests, including endpoint contact and non-mutation regressions.
+app/src/index.css — responsive baseline page styling.
+app/src/main.tsx — mounts App and imports CSS.
+app/package.json + package-lock.json — React, TypeScript, Vite and Vitest; build and test commands.
+sis-04/tests/ — supplied structural checker and declaration validator; do not edit.
 ```
 
 ### 2.2 The context message as sent
 
-<!-- The whole first message of your analysis chat: the map, AC1–AC6, F1–F5 and the constraints
-     (no login, payments, live APIs or database; fictional data only). Unedited. -->
+This was sent as the first message of a new, independent Codex session, with no parent conversation. The booking source is formatted compactly in this message; the baseline app files were kept unchanged.
 
 ```text
-(paste here)
+SIS 04 codebase analysis. Use clear English at B1 level. Inspect the baseline through this map and the source below. Give at least three located maintainability risks with evidence and priority, and a small numbered improvement plan. Discuss alternatives for blocked-room visibility and for refreshing results when the room changes. Analysis and plan only: no code yet, no full rewrite, no file edits.
+
+Repository map:
+app/src/App.tsx — page, two inline rooms, form state, check(), toMinutes(), fmt(), room selector and status.
+app/src/booking.ts — pure canBook plus Booking and BookingRequest types; AC1-AC5 already repaired in Week 08.
+app/src/booking.test.ts — 19 fixed-clock Vitest tests, including endpoint contact and non-mutation regressions.
+app/src/index.css — responsive baseline page styling.
+app/src/main.tsx — mounts App and imports CSS.
+app/package.json + package-lock.json — React, TypeScript, Vite and Vitest; build and test commands.
+sis-04/tests/ — supplied structural checker and declaration validator; do not edit.
+
+Baseline source: week-08 commit 2d3a7cd, copied unchanged into sis-04/app/.
+
+Preserve:
+AC1 Reject start >= end and requests in the past.
+AC2 Maximum duration 120 minutes.
+AC3 Reject a blocked room.
+AC4 Reject overlap; allow endpoint contact.
+AC5 Return Available / Unavailable without changing or saving booking data.
+AC6 Clear responsive feedback on desktop and mobile.
+
+New requirements:
+F1 Room capacity >= attendees.
+F2 A room must contain ALL selected equipment.
+F3 A blocked room is never Available.
+F4 Clear empty state for no matches.
+F5 Switching rooms refreshes the result and uses that room's own bookings.
+
+Constraints: at least four fictional rooms with id, name, capacity, equipment, blocked and bookings. No login, payments, live APIs, database, network calls or browser storage. Keep TypeScript. Data in src/rooms.ts (Room, ROOMS), filtering in src/filter.ts (filterRooms), booking in src/booking.ts (canBook, checkRoom), UI imports these rules. Preserve canBook and the 19 existing tests. Add fixed-fixture tests with AC1-AC5, F1-F5, B1-B6 and INT titles. No mocks, skip, only or test.each. Record one change at a time and test after it.
+
+Baseline App.tsx:
+import { useState } from 'react';
+import { canBook } from './booking';
+
+// Starter for students with no Week 06 project. The availability decision lives INSIDE this
+// component on purpose: Task 1 of Practice #07 is to extract it into src/booking.ts as
+// canBook({ start, end, now, blocked, bookings }) without changing what the page does.
+
+type Interval = { start: number; end: number };
+type Room = { id: string; name: string; blocked: boolean; bookings: Interval[] };
+
+const ROOMS: Room[] = [
+  { id: 'a101', name: 'Room A-101', blocked: false, bookings: [{ start: 600, end: 660 }] },
+  { id: 'b204', name: 'Room B-204', blocked: false, bookings: [] },
+];
+
+const toMinutes = (value: string) => {
+  const [h, m] = value.split(':').map(Number);
+  return h * 60 + m;
+};
+const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2,'0')}`;
+
+export default function App() {
+  const [roomId, setRoomId] = useState('a101');
+  const [now, setNow] = useState('09:00');
+  const [blocked, setBlocked] = useState(false);
+  const [start, setStart] = useState('11:00');
+  const [end, setEnd] = useState('12:00');
+  const [endOfDay, setEndOfDay] = useState(false);
+  const [result, setResult] = useState<boolean | null>(null);
+  const [error, setError] = useState('');
+
+  const room = ROOMS.find(r => r.id === roomId)!;
+
+  function check() {
+    setResult(null);
+    if (!start || !now || (!end && !endOfDay)) {
+      setError('Fill in the current time, the start and the end.');
+      return;
+    }
+    const s = toMinutes(start);
+    const e = endOfDay ? 1440 : toMinutes(end);
+    const n = toMinutes(now);
+    if (!(s < e)) {
+      setError('The end time must be after the start time.');
+    } else {
+      setError('');
+    }
+
+    const ok = canBook({ start: s, end: e, now: n, blocked, bookings: room.bookings });
+    setResult(ok);
+  }
+
+  return (
+    <main className="page">
+      <h1>Smart Campus Room Availability</h1>
+      <div className="row">
+        <label>Room
+          <select value={roomId} onChange={e => setRoomId(e.target.value)}>
+            {ROOMS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </label>
+        <label>Current time<input type="time" value={now} onChange={e => setNow(e.target.value)} /></label>
+        <label>Start<input type="time" value={start} onChange={e => setStart(e.target.value)} /></label>
+        <label>End<input type="time" value={end} disabled={endOfDay} onChange={e => setEnd(e.target.value)} /></label>
+        <label className="inline"><input type="checkbox" checked={endOfDay} onChange={e => setEndOfDay(e.target.checked)} /> Ends at 24:00</label>
+        <label className="inline"><input type="checkbox" checked={blocked} onChange={e => setBlocked(e.target.checked)} /> Room blocked</label>
+      </div>
+      <button onClick={check}>Check availability</button>
+      {error && <p className="error">{error}</p>}
+      {result !== null && (
+        <p className={`result ${result ? 'available' : 'unavailable'}`}>{result ? 'Available' : 'Unavailable'}</p>
+      )}
+      <h2>Existing bookings</h2>
+      <ul>{room.bookings.length ? room.bookings.map((b, i) => <li key={i}>{fmt(b.start)}–{fmt(b.end)}</li>) : <li>none</li>}</ul>
+    </main>
+  );
+}
+
+Baseline booking.ts:
+export type Booking = { start: number; end: number; };
+export type BookingRequest = { start: number; end: number; now: number; blocked: boolean; bookings: Booking[]; };
+export function canBook({ start, end, now, blocked, bookings }: {start: number; end: number; now: number; blocked: boolean; bookings: { start: number; end: number }[];}): boolean {
+  if (!(0 <= start && start < end && end <= 1440)) return false;
+  if (!(start > now)) return false;
+  if (end - start > 120) return false;
+  if (blocked) return false;
+  for (const b of bookings) {
+    if (start < b.end && end > b.start) return false;
+  }
+  // keep the room's list current with the slot that was just found free
+  return true;
+}
 ```
 
 ## 3. Codebase analysis (Task 1)
 
-### 3.1 Maintainability risks
 
-<!-- At least three, found in YOUR starting code. "Where" names a file or a function(),
-     e.g. src/App.tsx, check(). Evidence is what you saw, not what the assistant said.
-     Priority: High / Medium / Low. -->
+
+### 3.1 Maintainability risks
 
 | # | Risk | Where (file / function) | Evidence | Priority |
 | --- | --- | --- | --- | --- |
-| 1 | (write here) | (write here) | (write here) | High / Medium / Low |
-| 2 | (write here) | (write here) | (write here) | High / Medium / Low |
-| 3 | (write here) | (write here) | (write here) | High / Medium / Low |
+| 1 | Room block status can be bypassed | src/App.tsx, check() | blocked is a separate checkbox state; the call uses it rather than room.blocked. | High |
+| 2 | A room change leaves the old result visible | src/App.tsx, room select onChange | The handler sets only roomId, while result remains a stored Boolean from the previous room. | High |
+| 3 | Data and presentation grow together | src/App.tsx, ROOMS and local Room type | Two inline rooms lack capacity and equipment; filtering here would mix data, rules and UI. | Medium |
+| 4 | An empty filtered list can crash selection | src/App.tsx, ROOMS.find(...)! | The non-null assertion is followed by room.bookings; there is no path for no matching room. | High |
+
+I confirmed these statements in the baseline file. They are risks in the working prototype when the new requirements are added, not planted defects. The analysis answer is preserved in evidence/ai/01-analysis-answer.txt.
 
 ### 3.2 Improvement plan — before editing
 
-<!-- Numbered, in the order you will do it, smallest safe step first. Written BEFORE you change
-     code: the commit that adds this section comes before the commit that changes app/src. -->
+1. Preserve the baseline and its 19 passing tests. Move complete fictional room data into rooms.ts.
+2. Add fixed-fixture filter tests first, record the missing-module failure, then implement filterRooms for capacity and ALL equipment. Run the full suite.
+3. Add selected-room tests first, then implement checkRoom using the chosen room's blocked status and bookings. Keep canBook unchanged and run the full suite.
+4. Connect the catalog and filters to controlled UI components. Use a safe fallback selection and a clear no-match state.
+5. Store the checked request and derive its result for the current room. Clear it when times or filters change. Share time-field rendering and remove the UI's repeated time-order rule.
+6. Run the full suite and build after refactoring. Verify desktop/mobile flows in Chromium, capture all five screenshots, render both diagrams and measure the quality table.
 
-1. (write here)
-2. (write here)
-3. (write here)
+This plan is committed before the first change to app/src.
 
 ### 3.3 One AI suggestion I rejected or modified
 
 | Suggestion (as the assistant made it) | Decision | Why — with the AC, F-rule, test or file behind it |
 | --- | --- | --- |
-| (write here) | Rejected / Modified | (write here) |
+| Add a UI test for the empty message and for switching rooms with the same request. | Modified | I will use real Chromium browser automation for F4, F5 and AC6, plus a pure Vitest INT test, rather than adding jsdom and a rendering library to app dependencies. The browser checks must be recorded separately from the Vitest test count. |
+| Clear the result and ask the user to check again after a room change, offered as one option. | Rejected | I chose a derived result for the checked request, so F5 updates immediately with the new room's own data and no old Boolean remains. |
 
 ## 4. Feature extension (Task 2)
+
+
 
 ### 4.1 What I added
 
@@ -172,6 +293,8 @@ Both esbuild and oxc options were set. oxc options will be used and esbuild opti
 | (write here) | (write here) |
 
 ## 6. Automated tests (Task 4)
+
+
 
 ### 6.1 Test plan
 

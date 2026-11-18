@@ -48,7 +48,7 @@ const toMinutes = (value: string) => {
   const [h, m] = value.split(':').map(Number);
   return h * 60 + m;
 };
-const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2,'0')}`;
 
 export default function App() {
   const [roomId, setRoomId] = useState('a101');
@@ -108,26 +108,9 @@ export default function App() {
 }
 
 Baseline booking.ts:
-export type Booking = {
-  start: number;
-  end: number;
-};
-
-export type BookingRequest = {
-  start: number;
-  end: number;
-  now: number;
-  blocked: boolean;
-  bookings: Booking[];
-};
-
-export function canBook({ start, end, now, blocked, bookings }: {
-  start: number;
-  end: number;
-  now: number;
-  blocked: boolean;
-  bookings: { start: number; end: number }[];
-}): boolean {
+export type Booking = { start: number; end: number; };
+export type BookingRequest = { start: number; end: number; now: number; blocked: boolean; bookings: Booking[]; };
+export function canBook({ start, end, now, blocked, bookings }: {start: number; end: number; now: number; blocked: boolean; bookings: { start: number; end: number }[];}): boolean {
   if (!(0 <= start && start < end && end <= 1440)) return false;
   if (!(start > now)) return false;
   if (end - start > 120) return false;

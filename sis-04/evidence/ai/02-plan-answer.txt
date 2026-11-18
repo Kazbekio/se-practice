@@ -1,0 +1,38 @@
+I recommend keeping blocked rooms visible with a “Blocked” label and computing the result again when the selected room changes. Keep `canBook` and its 19 tests unchanged.
+
+| Room-change option | Benefit | Cost |
+|---|---|---|
+| Clear the result | Simple; removes the old result | The user must click Check again |
+| Compute it again | Shows the new room’s result immediately, using the same checked times | Needs a clear rule for handling time edits |
+
+Store the checked request, with numeric `start`, `end` and `now`. After a successful form check, calculate the result from that request and the selected room through `checkRoom`. Avoid storing a separate result boolean. Clear the checked request when a time field changes, so the result always matches the displayed times.
+
+| Blocked-room option | Benefit | Cost |
+|---|---|---|
+| Hide blocked rooms | Shorter list | Users cannot see why a known room is missing |
+| Show them with a label | Users can see the room and its blocked status | The list contains choices that cannot be booked |
+
+Keeping them visible also makes F3 easy to demonstrate. The blocked label comes from room data. `checkRoom` must reject blocked rooms even if the UI changes later.
+
+Use these file boundaries:
+
+- **`rooms.ts`:** Export `Room` and `ROOMS`. Hold at least four fictional rooms with all required fields. No filtering or availability decisions.
+- **`filter.ts`:** Export pure `filterRooms`. Check capacity ≥ attendees and ALL selected equipment. Return matching rooms without changing the input. Under the chosen policy, blocked rooms remain in this list.
+- **`booking.ts`:** Keep `canBook` unchanged. Add `checkRoom(rooms, roomId, request)`. Find the room, return false for an unknown ID, and call `canBook` with that room’s blocked status and bookings. No data changes.
+- **`App.tsx`:** Own form state, filters, selected room and checked request. Call the imported rules. Keep the selection when it still matches; otherwise select the first match. Handle an empty list safely. Allow tests to supply a fixed catalog.
+- **`RoomFilters.tsx`:** Show controlled attendee and equipment inputs. Receive values and change handlers through props.
+- **`AvailabilityPanel.tsx`:** Show the room selector, time fields, Check button, bookings and feedback. Receive data and handlers through props; contain no booking or filtering rules.
+
+A small test-first plan is:
+
+1. Record the baseline test output. Extract the catalog into `rooms.ts`, then run the unchanged 19 tests and build.
+2. Write fixed-fixture tests for F1, F2, F4, B5 and B6. See them fail, implement `filterRooms`, then run all tests.
+3. Write tests for F3, F5, unknown IDs and no mutation. Add B1–B4 and INT coverage using the real modules. Implement `checkRoom`, then run all tests.
+4. Connect filtering to the page. Add a UI test for the empty message and safe selection when a filter removes the current room.
+5. Add a UI test that checks one room, switches rooms and gets a different result for the same request. Implement the derived result, then check desktop and mobile feedback.
+
+Review and record each change before starting the next. Use fixed fixtures and clocks, without mocks, skipped tests, `.only` or `test.each`.
+
+Reject adding capacity and equipment checks inside `canBook`. That would change the protected function and mix room search with time availability. `filterRooms` and `checkRoom` keep those jobs clear.
+
+No files were changed.

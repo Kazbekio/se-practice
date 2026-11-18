@@ -1,0 +1,130 @@
+{
+  "ok": true,
+  "counts": {
+    "PASS": 14,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "total": 14,
+  "rows": [
+    {
+      "id": "D1",
+      "title": "schema and assignment",
+      "verdict": "PASS",
+      "message": "schema 1, assignment sis-04"
+    },
+    {
+      "id": "D2",
+      "title": "student.name and student.group",
+      "verdict": "PASS",
+      "message": "name and group filled"
+    },
+    {
+      "id": "D3",
+      "title": "student.student_id",
+      "verdict": "PASS",
+      "message": "student.student_id: 24B032123"
+    },
+    {
+      "id": "D4",
+      "title": "student.github",
+      "verdict": "PASS",
+      "message": "student.github: Kazbekio"
+    },
+    {
+      "id": "D5",
+      "title": "assistant.tool",
+      "verdict": "PASS",
+      "message": "assistant.tool: OpenAI Codex"
+    },
+    {
+      "id": "D6",
+      "title": "assistant.model is an exact model name or not displayed",
+      "verdict": "PASS",
+      "message": "assistant.model: not displayed"
+    },
+    {
+      "id": "D7",
+      "title": "project: starting point, baseline commit, language, Vitest",
+      "verdict": "PASS",
+      "message": "from week-08 at 6cc1665, ts, Vitest 4.1.12"
+    },
+    {
+      "id": "D8",
+      "title": "checker numbers add up",
+      "verdict": "PASS",
+      "message": "pass + fail + error = 33"
+    },
+    {
+      "id": "D9",
+      "title": "checker numbers match a run made now",
+      "verdict": "PASS",
+      "message": "declared 33/0/0, a run now gives 33/0/0"
+    },
+    {
+      "id": "D10",
+      "title": "checker.commit",
+      "verdict": "PASS",
+      "message": "checker.commit: c0a133c"
+    },
+    {
+      "id": "D11",
+      "title": "known_fails lists exactly what still fails",
+      "verdict": "PASS",
+      "message": "known_fails matches the checker: []"
+    },
+    {
+      "id": "D12",
+      "title": "counts match the files and report.md",
+      "verdict": "PASS",
+      "message": "counts filled and match"
+    },
+    {
+      "id": "D13",
+      "title": "review_findings: three, each naming what it is about",
+      "verdict": "PASS",
+      "message": "6 review findings"
+    },
+    {
+      "id": "D14",
+      "title": "honesty block answered",
+      "verdict": "PASS",
+      "message": "honesty block answered"
+    }
+  ],
+  "declared": {
+    "student_id": "24B032123",
+    "github": "Kazbekio",
+    "group": "Monday 16:00 - 19:00",
+    "tool": "OpenAI Codex",
+    "model": "not displayed",
+    "project": {
+      "start_from": "week-08",
+      "baseline_commit": "6cc1665",
+      "language": "ts",
+      "vitest": "4.1.12"
+    },
+    "commit": "c0a133c",
+    "checker": {
+      "pass": 33,
+      "fail": 0,
+      "error": 0
+    },
+    "known_fails": [],
+    "counts": {
+      "rooms": "5",
+      "tests_original": "19",
+      "tests_final": "34",
+      "risks": "4",
+      "exchanges": "3"
+    },
+    "findings": [
+      "F2: every selected equipment item is required; fixture rooms b and d are excluded from the projector-plus-whiteboard match.",
+      "F5: the same 630-660 request is false for room a and true for b; the browser also refreshes without another Check click.",
+      "B5 and B6: eight seats match eight attendees and are excluded for nine attendees, preserving the inclusive capacity rule.",
+      "AC5: repeated checks preserve the full catalog and the original nineteen-test file stays unchanged.",
+      "App.tsx: the checked request replaces the stale result Boolean, and an empty filtered list safely has no selected room.",
+      "booking.ts: executable canBook statements are unchanged; the misleading saving comment was removed."
+    ]
+  }
+}

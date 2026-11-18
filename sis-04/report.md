@@ -4,7 +4,7 @@
 
 **Student ID:** 24B032123
 
-**Group/session:** Monday 16:00 - 19:00 (from Week 07 report)
+**Group/session:** Monday 16:00 - 19:00
 
 **Date:** 2026-11-18
 

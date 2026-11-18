@@ -1,0 +1,310 @@
+{
+  "ok": true,
+  "counts": {
+    "PASS": 33,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "total": 33,
+  "rows": [
+    {
+      "id": "A1",
+      "title": "project in app/: package.json, src/booking with canBook",
+      "verdict": "PASS",
+      "message": "app/src/booking.ts, canBook"
+    },
+    {
+      "id": "A2",
+      "title": "src/rooms: ROOMS with 4+ rooms, every field",
+      "verdict": "PASS",
+      "message": "5 rooms, every field"
+    },
+    {
+      "id": "A3",
+      "title": "src/filter: filterRooms reads capacity and equipment",
+      "verdict": "PASS",
+      "message": "filterRooms reads capacity and equipment"
+    },
+    {
+      "id": "A4",
+      "title": "checkRoom in src/booking reuses canBook with the chosen room",
+      "verdict": "PASS",
+      "message": "checkRoom reuses canBook"
+    },
+    {
+      "id": "A5",
+      "title": "the UI imports the rules and holds no room data or rule of its own",
+      "verdict": "PASS",
+      "message": "UI in 7 file(s), rules imported"
+    },
+    {
+      "id": "A6",
+      "title": "canBook still enforces AC1-AC5",
+      "verdict": "PASS",
+      "message": "AC1-AC5 rules in place"
+    },
+    {
+      "id": "A7",
+      "title": "clean and in scope: no node_modules, .env, network, storage, login",
+      "verdict": "PASS",
+      "message": "clean, nothing out of scope"
+    },
+    {
+      "id": "A8",
+      "title": "app/README.md: setup, run and test commands",
+      "verdict": "PASS",
+      "message": "app/README.md"
+    },
+    {
+      "id": "S1",
+      "title": "test files import vitest and the real modules",
+      "verdict": "PASS",
+      "message": "2 test file(s)"
+    },
+    {
+      "id": "S2",
+      "title": "nothing mocked, skipped, focused or table-driven",
+      "verdict": "PASS",
+      "message": "every test runs"
+    },
+    {
+      "id": "S3",
+      "title": "10 tests or more",
+      "verdict": "PASS",
+      "message": "34 tests"
+    },
+    {
+      "id": "S4",
+      "title": "regression tests AC1-AC5",
+      "verdict": "PASS",
+      "message": "AC1-AC5 each have a test"
+    },
+    {
+      "id": "S5",
+      "title": "feature tests F1-F5 on filterRooms / checkRoom",
+      "verdict": "PASS",
+      "message": "F1-F5 each have a test"
+    },
+    {
+      "id": "S6",
+      "title": "boundary tests B1-B6",
+      "verdict": "PASS",
+      "message": "B1-B6 each have a test"
+    },
+    {
+      "id": "S7",
+      "title": "an INT integration or UI behaviour test",
+      "verdict": "PASS",
+      "message": "integration test present"
+    },
+    {
+      "id": "D1",
+      "title": "diagrams/before.puml and after.puml are PlantUML",
+      "verdict": "PASS",
+      "message": "two PlantUML diagrams"
+    },
+    {
+      "id": "D2",
+      "title": "after.puml names rooms, booking, filter and the UI, and differs",
+      "verdict": "PASS",
+      "message": "the four parts are named"
+    },
+    {
+      "id": "E1",
+      "title": "evidence: filter-match and filter-empty",
+      "verdict": "PASS",
+      "message": "evidence/filter-match.png, evidence/filter-empty.png"
+    },
+    {
+      "id": "E2",
+      "title": "evidence: switch-a and switch-b",
+      "verdict": "PASS",
+      "message": "evidence/switch-a.png, evidence/switch-b.png"
+    },
+    {
+      "id": "E3",
+      "title": "evidence: narrow (portrait), five distinct screenshots",
+      "verdict": "PASS",
+      "message": "evidence/narrow.png, 390x2678"
+    },
+    {
+      "id": "R1",
+      "title": "report 1.1: the baseline run",
+      "verdict": "PASS",
+      "message": "19 passed (19)"
+    },
+    {
+      "id": "R2",
+      "title": "report 6.3: the final run, all passing, same tests",
+      "verdict": "PASS",
+      "message": "34 passed (34)"
+    },
+    {
+      "id": "R3",
+      "title": "report 7: tests passed / total match the two runs",
+      "verdict": "PASS",
+      "message": "19/19 -> 34/34, as the runs show"
+    },
+    {
+      "id": "L1",
+      "title": "report 1: assistant, model, starting point, baseline commit",
+      "verdict": "PASS",
+      "message": "setup recorded, starting from week-08"
+    },
+    {
+      "id": "L2",
+      "title": "report 2: repository map and the context as sent",
+      "verdict": "PASS",
+      "message": "map and context recorded"
+    },
+    {
+      "id": "L3",
+      "title": "report 3.1: three or more risks, each with a file or function",
+      "verdict": "PASS",
+      "message": "4 risks, each located"
+    },
+    {
+      "id": "L4",
+      "title": "report 3.2-3.3: a plan before editing, one suggestion rejected or modified",
+      "verdict": "PASS",
+      "message": "plan of 6 steps, a suggestion modified"
+    },
+    {
+      "id": "L5",
+      "title": "report 4.2: what each screenshot shows",
+      "verdict": "PASS",
+      "message": "all five screenshots described"
+    },
+    {
+      "id": "L6",
+      "title": "report 5: responsibilities, two design decisions, duplication",
+      "verdict": "PASS",
+      "message": "10 modules, 4 decisions, 3 duplicate(s) removed"
+    },
+    {
+      "id": "L7",
+      "title": "report 6.1-6.2: the test plan and the commands",
+      "verdict": "PASS",
+      "message": "every required ID planned, commands recorded"
+    },
+    {
+      "id": "L8",
+      "title": "report 7: the quality table, with how each measure was obtained",
+      "verdict": "PASS",
+      "message": "four measures, each with how it was obtained"
+    },
+    {
+      "id": "L9",
+      "title": "report 8: three or more AI exchanges, every field",
+      "verdict": "PASS",
+      "message": "3 complete exchanges"
+    },
+    {
+      "id": "L10",
+      "title": "report 10: reflection of 200-300 words",
+      "verdict": "PASS",
+      "message": "256 words"
+    }
+  ],
+  "measured": {
+    "app_root": "app",
+    "modules": {
+      "booking": "app/src/booking.ts",
+      "rooms": "app/src/rooms.ts",
+      "filter": "app/src/filter.ts"
+    },
+    "rooms": 5,
+    "ui_files": [
+      "app/src/App.tsx",
+      "app/src/main.tsx",
+      "app/src/time.ts",
+      "app/src/components/AvailabilityPanel.tsx",
+      "app/src/components/RoomCatalog.tsx",
+      "app/src/components/RoomFilters.tsx",
+      "app/src/components/TimeField.tsx"
+    ],
+    "scope": [],
+    "test_files": [
+      "app/src/booking.test.ts",
+      "app/src/catalog.test.ts"
+    ],
+    "tests_final": 34,
+    "test_titles": [
+      "T01 AC4: touching after is allowed",
+      "T02 AC1: starting at the current time is rejected",
+      "T03 AC1: zero duration is rejected",
+      "T04 AC1: a reversed interval is rejected",
+      "T05 AC1: an end after 1440 is rejected",
+      "T06 AC2: exactly 120 minutes is allowed",
+      "T07 AC2: 121 minutes is rejected",
+      "T08 AC4: touching before is allowed",
+      "T09 AC4: partial overlap is rejected",
+      "T10 AC4: an interval containing a booking is rejected",
+      "T11 AC4: an interval inside a booking is rejected",
+      "T12 AC4: an identical interval is rejected",
+      "T13 AC3: a blocked room is rejected",
+      "T14 AC4: an empty booking list has no overlap",
+      "AC5: an available check does not change existing bookings",
+      "X1 AC1 AC2: an interval may end exactly at 1440",
+      "X2 AC1: a one-minute interval after now is allowed",
+      "BUG-A AC4: the exact gap between two bookings is available",
+      "BUG-B AC5: a separate afternoon slot leaves bookings unchanged",
+      "F1 B5: equal capacity is included",
+      "F1 B6: capacity one below is excluded",
+      "F2: all selected equipment is required",
+      "F2: no equipment requirement allows every capacity match",
+      "F4: no room has enough seats",
+      "AC5 F1 F2: filtering preserves the catalog and criteria",
+      "AC3 F3: a blocked room is unavailable",
+      "F5: the same request uses each room own bookings",
+      "F5: an unknown room is unavailable",
+      "AC5 F5: repeated checks preserve every room",
+      "AC2 B1: exactly 120 minutes is allowed",
+      "AC2 B2: 121 minutes is rejected",
+      "AC4 B3: endpoint contact is allowed",
+      "AC4 B4: overlap is rejected",
+      "INT F1 F2 F3: filter matches are checked for availability"
+    ],
+    "ids_found": [
+      "AC1",
+      "AC2",
+      "AC3",
+      "AC4",
+      "AC5",
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "INT"
+    ],
+    "baseline_run": {
+      "failed": 0,
+      "passed": 19,
+      "skipped": 0,
+      "todo": 0,
+      "total": 19
+    },
+    "tests_original": 19,
+    "final_run": {
+      "failed": 0,
+      "passed": 34,
+      "skipped": 0,
+      "todo": 0,
+      "total": 34
+    },
+    "vitest_version": "4.1.12",
+    "start_from": "week-08",
+    "baseline_commit": "6cc1665",
+    "risks": 4,
+    "duplicates_removed": 3,
+    "exchanges": 3,
+    "reflection_words": 256
+  }
+}

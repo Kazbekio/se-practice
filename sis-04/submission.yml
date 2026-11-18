@@ -1,0 +1,47 @@
+# SIS 04 declaration. Date: 2026-11-18.
+schema: 1
+assignment: "sis-04"
+
+student:
+  name: Shynbulat Kazbek
+  student_id: 24B032123
+  group: "Monday 16:00 - 19:00"
+  github: Kazbekio
+
+assistant:
+  tool: OpenAI Codex
+  model: not displayed
+
+project:
+  start_from: week-08
+  baseline_commit: 6cc1665
+  language: ts
+  vitest: 4.1.12
+
+counts:
+  rooms: 5
+  tests_original: 19
+  tests_final: 34
+  risks: 4
+  exchanges: 3
+
+checker:
+  pass: 33
+  fail: 0
+  error: 0
+  commit: c0a133c
+  known_fails: []
+
+review_findings:
+  - "F2: every selected equipment item is required; fixture rooms b and d are excluded from the projector-plus-whiteboard match."
+  - "F5: the same 630-660 request is false for room a and true for b; the browser also refreshes without another Check click."
+  - "B5 and B6: eight seats match eight attendees and are excluded for nine attendees, preserving the inclusive capacity rule."
+  - "AC5: repeated checks preserve the full catalog and the original nineteen-test file stays unchanged."
+  - "App.tsx: the checked request replaces the stale result Boolean, and an empty filtered list safely has no selected room."
+  - "booking.ts: executable canBook statements are unchanged; the misleading saving comment was removed."
+
+honesty:
+  baseline_unchanged: yes
+  runs_unedited: yes
+  no_invented_metrics: yes
+  ai_usage_disclosed: yes

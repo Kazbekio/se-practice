@@ -1,0 +1,12 @@
+@startuml
+!pragma layout smetana
+skinparam componentStyle rectangle
+left to right direction
+component "main.tsx" as Main
+component "App.tsx\nrooms, form and presentation" as App
+component "booking.ts\ncanBook" as Booking
+component "index.css" as CSS
+Main --> App : import
+Main --> CSS : import
+App --> Booking : canBook
+@enduml

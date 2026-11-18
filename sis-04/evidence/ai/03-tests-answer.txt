@@ -1,0 +1,21 @@
+This catalog is suitable. Give each room a fictional `name` and create a fresh catalog for each test. Room **c stays in filter results**, but its availability must always be false.
+
+For filtering, use these exact expectations:
+
+| Test title | Attendees | Required equipment | Expected room IDs | Reason |
+|---|---:|---|---|---|
+| `F1 B5: equal capacity is included` | 8 | none | `[a, b, c]` | Room a has exactly 8 seats |
+| `F1 B6: capacity one below is excluded` | 9 | none | `[b, c]` | Room a has 8 seats, one too few |
+| `F2: all selected equipment is required` | 6 | projector, whiteboard | `[a, c]` | b and d each lack one required item |
+| `F2: no equipment requirement allows every capacity match` | 6 | none | `[a, b, c, d]` | No equipment items are required |
+| `F4: no room has enough seats` | 21 | none | `[]` | The largest room has 20 seats |
+
+[…]
+
+The F5 helper test proves that `checkRoom` uses the correct bookings. A separate page test should prove that switching the selector refreshes the displayed result. Likewise, the F4 filter test proves an empty list; a page test should check the empty-state message.
+
+The UI should not repeat `start < end`. That rule already belongs to `canBook`. Two copies could change differently and produce confusing feedback. The UI should check missing inputs, convert times to numbers, and call `checkRoom`.
+
+[…]
+
+Retain all 19 existing tests and add these as separate tests. No files were changed.

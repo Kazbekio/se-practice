@@ -1,0 +1,32 @@
+@startuml
+!pragma layout smetana
+skinparam componentStyle rectangle
+left to right direction
+component "App.tsx" as N0
+component "booking.ts" as N1
+component "components/AvailabilityPanel.tsx" as N2
+component "components/RoomCatalog.tsx" as N3
+component "components/RoomFilters.tsx" as N4
+component "components/TimeField.tsx" as N5
+component "filter.ts" as N6
+component "index.css" as N7
+component "main.tsx" as N8
+component "rooms.ts" as N9
+component "time.ts" as N10
+N0 --> N9 : import
+N0 --> N6 : import
+N0 --> N1 : import
+N0 --> N10 : import
+N0 --> N4 : import
+N0 --> N3 : import
+N0 --> N2 : import
+N1 --> N9 : import
+N2 --> N9 : import
+N2 --> N10 : import
+N2 --> N5 : import
+N3 --> N9 : import
+N4 --> N9 : import
+N6 --> N9 : import
+N8 --> N0 : import
+N8 --> N7 : import
+@enduml

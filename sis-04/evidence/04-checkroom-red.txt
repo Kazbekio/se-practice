@@ -1,0 +1,166 @@
+7:00:39 PM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+7:00:39 PM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/sis-04/app
+
+ ✓ src/booking.test.ts > canBook > T01 AC4: touching after is allowed 1ms
+ ✓ src/booking.test.ts > canBook > T02 AC1: starting at the current time is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T03 AC1: zero duration is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T04 AC1: a reversed interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T05 AC1: an end after 1440 is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T06 AC2: exactly 120 minutes is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T07 AC2: 121 minutes is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T08 AC4: touching before is allowed 0ms
+ ✓ src/booking.test.ts > canBook > T09 AC4: partial overlap is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T10 AC4: an interval containing a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T11 AC4: an interval inside a booking is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T12 AC4: an identical interval is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T13 AC3: a blocked room is rejected 0ms
+ ✓ src/booking.test.ts > canBook > T14 AC4: an empty booking list has no overlap 0ms
+ ✓ src/booking.test.ts > canBook > AC5: an available check does not change existing bookings 1ms
+ ✓ src/booking.test.ts > canBook > X1 AC1 AC2: an interval may end exactly at 1440 0ms
+ ✓ src/booking.test.ts > canBook > X2 AC1: a one-minute interval after now is allowed 0ms
+ ✓ src/booking.test.ts > canBook > BUG-A AC4: the exact gap between two bookings is available 0ms
+ ✓ src/booking.test.ts > canBook > BUG-B AC5: a separate afternoon slot leaves bookings unchanged 0ms
+ ✓ src/catalog.test.ts > F1 B5: equal capacity is included 2ms
+ ✓ src/catalog.test.ts > F1 B6: capacity one below is excluded 0ms
+ ✓ src/catalog.test.ts > F2: all selected equipment is required 0ms
+ ✓ src/catalog.test.ts > F2: no equipment requirement allows every capacity match 0ms
+ ✓ src/catalog.test.ts > F4: no room has enough seats 0ms
+ ✓ src/catalog.test.ts > AC5 F1 F2: filtering preserves the catalog and criteria 1ms
+ × src/catalog.test.ts > AC3 F3: a blocked room is unavailable 3ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > F5: the same request uses each room own bookings 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > F5: an unknown room is unavailable 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > AC5 F5: repeated checks preserve every room 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > AC2 B1: exactly 120 minutes is allowed 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > AC2 B2: 121 minutes is rejected 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > AC4 B3: endpoint contact is allowed 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > AC4 B4: overlap is rejected 0ms
+   → checkRoom is not a function
+ × src/catalog.test.ts > INT F1 F2 F3: filter matches are checked for availability 0ms
+   → checkRoom is not a function
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalog.test.ts > AC3 F3: a blocked room is unavailable
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:41:10
+     39|
+     40| test('AC3 F3: a blocked room is unavailable', () => {
+     41|   expect(checkRoom(fixture(), 'c', { start: 630, end: 660, now: 540 })…
+       |          ^
+     42| });
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/catalog.test.ts > F5: the same request uses each room own bookings
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:47:10
+     45|   const rooms = fixture();
+     46|   const request = { start: 630, end: 660, now: 540 };
+     47|   expect(checkRoom(rooms, 'a', request)).toBe(false);
+       |          ^
+     48|   expect(checkRoom(rooms, 'b', request)).toBe(true);
+     49| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/catalog.test.ts > F5: an unknown room is unavailable
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:52:10
+     50|
+     51| test('F5: an unknown room is unavailable', () => {
+     52|   expect(checkRoom(fixture(), 'missing', { start: 630, end: 660, now: …
+       |          ^
+     53| });
+     54|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/catalog.test.ts > AC5 F5: repeated checks preserve every room
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:58:10
+     56|   const rooms = fixture();
+     57|   const before = structuredClone(rooms);
+     58|   expect(checkRoom(rooms, 'a', { start: 660, end: 720, now: 540 })).to…
+       |          ^
+     59|   expect(checkRoom(rooms, 'a', { start: 660, end: 720, now: 540 })).to…
+     60|   expect(checkRoom(rooms, 'c', { start: 660, end: 720, now: 540 })).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/catalog.test.ts > AC2 B1: exactly 120 minutes is allowed
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:65:10
+     63|
+     64| test('AC2 B1: exactly 120 minutes is allowed', () => {
+     65|   expect(checkRoom(fixture(), 'b', { start: 600, end: 720, now: 540 })…
+       |          ^
+     66| });
+     67|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/catalog.test.ts > AC2 B2: 121 minutes is rejected
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:69:10
+     67|
+     68| test('AC2 B2: 121 minutes is rejected', () => {
+     69|   expect(checkRoom(fixture(), 'b', { start: 600, end: 721, now: 540 })…
+       |          ^
+     70| });
+     71|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/catalog.test.ts > AC4 B3: endpoint contact is allowed
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:73:10
+     71|
+     72| test('AC4 B3: endpoint contact is allowed', () => {
+     73|   expect(checkRoom(fixture(), 'd', { start: 630, end: 660, now: 540 })…
+       |          ^
+     74| });
+     75|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/catalog.test.ts > AC4 B4: overlap is rejected
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:77:10
+     75|
+     76| test('AC4 B4: overlap is rejected', () => {
+     77|   expect(checkRoom(fixture(), 'a', { start: 630, end: 660, now: 540 })…
+       |          ^
+     78| });
+     79|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/catalog.test.ts > INT F1 F2 F3: filter matches are checked for availability
+TypeError: checkRoom is not a function
+ ❯ src/catalog.test.ts:85:10
+     83|   const matches = filterRooms(rooms, { attendees: 8, equipment: ['proj…
+     84|   expect(matches.map(room => room.id)).toEqual(['a', 'c']);
+     85|   expect(checkRoom(matches, matches[0].id, { start: 660, end: 720, now…
+       |          ^
+     86|   expect(checkRoom(matches, matches[1].id, { start: 660, end: 720, now…
+     87|   expect(rooms).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  9 failed | 25 passed (34)
+   Start at  19:00:39
+   Duration  164ms (transform 36ms, setup 0ms, import 72ms, tests 16ms, environment 0ms)
+

@@ -1,0 +1,12 @@
+Run UTC: 2026-11-18T14:07:38.875Z
+Demo date: 2026-11-18
+PASS AC4 AC5: repeated 11:00-12:00 endpoint checks keep Cedar bookings unchanged.
+PASS F5: the same 10:30-11:00 request changes from Unavailable in Cedar to Available in Orion without another Check click.
+PASS F3: the maintenance room stays visible and is Unavailable.
+PASS F1 F2: 12 attendees plus projector and whiteboard shows only Orion and Nova; the removed selection safely falls back to Orion.
+PASS F4: 40 attendees gives a clear empty state and disables availability checking.
+PASS AC1: reversed and past requests are Unavailable.
+PASS AC2: exactly 120 minutes is Available, 121 is Unavailable; time edits clear the old result.
+PASS AC1 AC6: the end-of-day option allows 22:00-24:00; a missing start triggers native required-field validation.
+PASS AC6: 390x844 portrait viewport has visible controls, clear status and no horizontal overflow.
+PASS browser: no JavaScript page errors.

@@ -1,77 +1,45 @@
-import { useState } from 'react';
-import { canBook } from './booking';
+import { useState, type FormEvent } from 'react';
+import { ROOMS } from './rooms';
+import { filterRooms } from './filter';
+import { checkRoom, type BookingRequest } from './booking';
+import { toMinutes, type TimeFields } from './time';
+import { RoomFilters } from './components/RoomFilters';
+import { RoomCatalog } from './components/RoomCatalog';
+import { AvailabilityPanel } from './components/AvailabilityPanel';
 
-// Starter for students with no Week 06 project. The availability decision lives INSIDE this
-// component on purpose: Task 1 of Practice #07 is to extract it into src/booking.ts as
-// canBook({ start, end, now, blocked, bookings }) without changing what the page does.
-
-type Interval = { start: number; end: number };
-type Room = { id: string; name: string; blocked: boolean; bookings: Interval[] };
-
-const ROOMS: Room[] = [
-  { id: 'a101', name: 'Room A-101', blocked: false, bookings: [{ start: 600, end: 660 }] },
-  { id: 'b204', name: 'Room B-204', blocked: false, bookings: [] },
-];
-
-const toMinutes = (value: string) => {
-  const [h, m] = value.split(':').map(Number);
-  return h * 60 + m;
-};
-const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+type CheckedRequest = Pick<BookingRequest, 'start' | 'end' | 'now'>;
 
 export default function App() {
-  const [roomId, setRoomId] = useState('a101');
-  const [now, setNow] = useState('09:00');
-  const [blocked, setBlocked] = useState(false);
-  const [start, setStart] = useState('11:00');
-  const [end, setEnd] = useState('12:00');
-  const [endOfDay, setEndOfDay] = useState(false);
-  const [result, setResult] = useState<boolean | null>(null);
-  const [error, setError] = useState('');
+  const [attendees, setAttendees] = useState('8');
+  const [equipment, setEquipment] = useState<string[]>([]);
+  const [roomId, setRoomId] = useState('cedar');
+  const [fields, setFields] = useState<TimeFields>({ now: '09:00', start: '11:00', end: '12:00', endOfDay: false });
+  const [checkedRequest, setCheckedRequest] = useState<CheckedRequest | null>(null);
+  const matches = filterRooms(ROOMS, { attendees: Number(attendees) || 1, equipment });
+  const selectedRoom = matches.find(room => room.id === roomId) ?? matches[0];
+  const result = checkedRequest && selectedRoom ? checkRoom(ROOMS, selectedRoom.id, checkedRequest) : null;
 
-  const room = ROOMS.find(r => r.id === roomId)!;
-
-  function check() {
-    setResult(null);
-    if (!start || !now || (!end && !endOfDay)) {
-      setError('Fill in the current time, the start and the end.');
-      return;
-    }
-    const s = toMinutes(start);
-    const e = endOfDay ? 1440 : toMinutes(end);
-    const n = toMinutes(now);
-    if (!(s < e)) {
-      setError('The end time must be after the start time.');
-    } else {
-      setError('');
-    }
-
-    const ok = canBook({ start: s, end: e, now: n, blocked, bookings: room.bookings });
-    setResult(ok);
+  function updateFilters(count: string, items: string[]) {
+    setAttendees(count); setEquipment(items); setCheckedRequest(null);
   }
 
-  return (
-    <main className="page">
-      <h1>Smart Campus Room Availability</h1>
-      <div className="row">
-        <label>Room
-          <select value={roomId} onChange={e => setRoomId(e.target.value)}>
-            {ROOMS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-          </select>
-        </label>
-        <label>Current time<input type="time" value={now} onChange={e => setNow(e.target.value)} /></label>
-        <label>Start<input type="time" value={start} onChange={e => setStart(e.target.value)} /></label>
-        <label>End<input type="time" value={end} disabled={endOfDay} onChange={e => setEnd(e.target.value)} /></label>
-        <label className="inline"><input type="checkbox" checked={endOfDay} onChange={e => setEndOfDay(e.target.checked)} /> Ends at 24:00</label>
-        <label className="inline"><input type="checkbox" checked={blocked} onChange={e => setBlocked(e.target.checked)} /> Room blocked</label>
-      </div>
-      <button onClick={check}>Check availability</button>
-      {error && <p className="error">{error}</p>}
-      {result !== null && (
-        <p className={`result ${result ? 'available' : 'unavailable'}`}>{result ? 'Available' : 'Unavailable'}</p>
-      )}
-      <h2>Existing bookings</h2>
-      <ul>{room.bookings.length ? room.bookings.map((b, i) => <li key={i}>{fmt(b.start)}–{fmt(b.end)}</li>) : <li>none</li>}</ul>
-    </main>
-  );
+  function updateField(key: 'now' | 'start' | 'end', value: string) {
+    setFields(previous => ({ ...previous, [key]: value })); setCheckedRequest(null);
+  }
+
+  function check(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setCheckedRequest({ start: toMinutes(fields.start), end: fields.endOfDay ? 1440 : toMinutes(fields.end), now: toMinutes(fields.now) });
+  }
+
+  return <main className="page-shell">
+    <header className="topbar"><div className="brand"><span className="brand-mark" aria-hidden="true">cc</span><div><strong>Campus Commons</strong><span>ROOM FINDER</span></div></div><span className="demo-tag"><i aria-hidden="true" />Fictional campus</span></header>
+    <section className="hero"><div><p className="eyebrow">A LITTLE SPACE. A BIG IDEA.</p><h1>Find a room.<br />Make it your own.</h1><p>Match your group, choose your tools, then check a time.</p></div><div className="day-card"><span>DEMO DAY</span><strong>18 <small>NOV 2026</small></strong><p>One day · a fixed clock<br />Availability checks only</p></div></section>
+    <div className="workspace">
+      <RoomFilters attendees={attendees} selectedEquipment={equipment} onAttendeesChange={value => updateFilters(value, equipment)} onEquipmentChange={items => updateFilters(attendees, items)} onReset={() => updateFilters('8', [])} />
+      <RoomCatalog rooms={matches} selectedId={selectedRoom?.id} onSelect={setRoomId} />
+      <AvailabilityPanel room={selectedRoom} fields={fields} result={result} onFieldChange={updateField} onEndOfDayChange={endOfDay => { setFields(previous => ({ ...previous, endOfDay })); setCheckedRequest(null); }} onSubmit={check} />
+    </div>
+    <footer className="page-footer"><span>Campus Commons</span><span>All rooms and bookings are fictional. Nothing is saved.</span></footer>
+  </main>;
 }

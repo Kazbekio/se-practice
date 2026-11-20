@@ -1,0 +1,16 @@
+
+> smart-campus-availability@0.0.0 test
+> vitest run
+
+10:27:25 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+10:27:25 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-10/app
+
+
+ Test Files  1 passed (1)
+      Tests  20 passed (20)
+   Start at  10:27:25
+   Duration  886ms (transform 91ms, setup 0ms, import 183ms, tests 87ms, environment 458ms)
+

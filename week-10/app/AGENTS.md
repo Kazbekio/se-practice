@@ -8,6 +8,7 @@ anything, and follow it over any general habit of yours.
 A React + TypeScript page (Vite) that tells a student whether a campus room is free for a
 requested time. The booking rule lives in `src/booking.ts` (`canBook`); the page is `src/App.tsx`;
 the tests are in `src/booking.test.ts`.
+Form conversion and feedback live in the pure `src/availability.ts` module.
 
 Use one fictional room and fictional bookings; never use real names or timetables.
 

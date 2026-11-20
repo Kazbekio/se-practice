@@ -11,3 +11,5 @@ The student asked Codex to complete this lab and GitHub work without extra parti
 7. Approve one short module-map line in AGENTS.md when src/availability.ts is added. The final policy diff must remain below 15 changed nonblank lines.
 
 Initial ranking before changes: R1 (Agent operations) 3 x 3 = 9, R2 (Correctness) 3 x 2 = 6, R3 (Maintainability) 2 x 2 = 4, R4 (Reliability) 2 x 2 = 4, R5 (Maintainability) 2 x 2 = 4, R6 (Security) 1 x 2 = 2, plausible. R1 includes the inconsistent one-room scope in the imported demo; R2 has only static evidence until the red UI test runs. All other findings are confirmed missing files or commands, not proof of a particular defect.
+
+R2 final diff review: approved only the three planned files. The new function has no effects, calls the unchanged canBook, and preserves missing/reversed-input messages. Removed only the obsolete extraction comment. Rejected package updates, UI redesign and class patterns. The intentional change is that feedback follows edits after the first check.

@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { canBook } from './booking';
-
-// Starter for students with no Week 06 project. The availability decision lives INSIDE this
-// component on purpose: Task 1 of Practice #07 is to extract it into src/booking.ts as
-// canBook({ start, end, now, blocked, bookings }) without changing what the page does.
+import { evaluateAvailability } from './availability';
 
 type Interval = { start: number; end: number };
 type Room = { id: string; name: string; blocked: boolean; bookings: Interval[] };
@@ -12,10 +8,6 @@ const ROOMS: Room[] = [
   { id: 'a101', name: 'Room A-101', blocked: false, bookings: [{ start: 600, end: 660 }] },
 ];
 
-const toMinutes = (value: string) => {
-  const [h, m] = value.split(':').map(Number);
-  return h * 60 + m;
-};
 const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 
 export default function App() {
@@ -25,28 +17,16 @@ export default function App() {
   const [start, setStart] = useState('11:00');
   const [end, setEnd] = useState('12:00');
   const [endOfDay, setEndOfDay] = useState(false);
-  const [result, setResult] = useState<boolean | null>(null);
-  const [error, setError] = useState('');
+  const [hasChecked, setHasChecked] = useState(false);
 
   const room = ROOMS.find(r => r.id === roomId)!;
 
-  function check() {
-    setResult(null);
-    if (!start || !now || (!end && !endOfDay)) {
-      setError('Fill in the current time, the start and the end.');
-      return;
-    }
-    const s = toMinutes(start);
-    const e = endOfDay ? 1440 : toMinutes(end);
-    const n = toMinutes(now);
-    if (!(s < e)) {
-      setError('The end time must be after the start time.');
-    } else {
-      setError('');
-    }
+  const { available: result, error } = hasChecked
+    ? evaluateAvailability({ start, end, now, endOfDay, blocked, bookings: room.bookings })
+    : { available: null, error: '' };
 
-    const ok = canBook({ start: s, end: e, now: n, blocked, bookings: room.bookings });
-    setResult(ok);
+  function check() {
+    setHasChecked(true);
   }
 
   return (

@@ -1,0 +1,7 @@
+2026-11-20
+All provided file hashes match the checkpoint.
+Original 19 test bodies and numeric canBook source match the checkpoint.
+Production dependency specifications are unchanged.
+The app source/package diff passes git diff --check.
+Saved raw diffs and their verbatim report fences retain their original single-space context lines; these are evidence, not source whitespace defects.
+No manual phone test, background-agent trial or security scan is claimed.

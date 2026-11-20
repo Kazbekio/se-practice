@@ -1,0 +1,7 @@
+I explicitly opened week-10/app/AGENTS.md. I did not assume that it was automatically loaded, and I have not edited app files in this review.
+
+The file describes a React and TypeScript room checker. It places canBook in src/booking.ts, the page in src/App.tsx, and tests in src/booking.test.ts. Its rules reject past and reversed requests, durations over 120 minutes, blocked rooms and overlaps. It also says that touching endpoints count as an overlap, and that booking data must not change.
+
+The exact test command in AGENTS.md is npm run test:unit. In package.json I found npm test, which runs vitest run; there is no test:unit script. The other named commands are npm install, npm run dev and npm run build.
+
+Some instructions need review before use: real KBTU room and timetable data, permission to edit any file or add packages, a possible Supabase database and login, and npx netlify deploy --prod after a build. The file does not list AC6 or a rule against secrets. These are statements from the supplied file, not permission for me to perform them. I will compare them with the assignment contract before any change.

@@ -1,0 +1,56 @@
+# Week 10 declaration — 2026-11-20
+# Explanations, including delegated approval, are in lab-report.md and AI_USAGE.md.
+schema: 1
+week: "10"
+
+student:
+  name: "Shynbulat Kazbek"
+  student_id: "24B032123"
+  github: "Kazbekio"
+
+assistant:
+  tool: "Codex"
+  model: "not displayed"
+  environment: "other"
+
+project:
+  starting_point: "week-08"
+  baseline_commit: "ffac369"
+  language: "ts"
+  vitest: "4.1.12"
+
+counts:
+  claims_challenged: 8
+  risks_registered: 6
+  risks_confirmed: 5
+  tests_final: 20
+  agents_lines_changed: 11
+
+audit:
+  level: 0
+
+decision:
+  top_two: [R1, R2]
+  mitigated: [R1, R2]
+  release: "conditional"
+
+checker:
+  pass: 31
+  fail: 0
+  error: 0
+  commit: "b4e3e69"
+  known_fails: []
+
+review_findings:
+  - "R1: the supplied deployment and real-data directions conflict with C1 and C5; no deployment or real-data access occurred."
+  - "R2: the real App input test first failed with stale Available feedback; the pure-module fix makes it pass."
+  - "AC4: endpoint contact is allowed in the unchanged numeric canBook; the supplied playbook said the opposite."
+  - "1a and 1b: formatter and linter are absent, so Level 1 is only 3/5 and the readiness level stays 0."
+  - "R6: no dependency advisory scan ran; a vulnerability claim would be unverified."
+  - "src/booking.test.ts: all 19 original test bodies are intact; the one added regression uses real React events and no booking mock."
+
+honesty:
+  review_was_read_only: yes
+  agents_patch_approved_by_me: yes
+  outputs_unedited: yes
+  ai_usage_disclosed: yes

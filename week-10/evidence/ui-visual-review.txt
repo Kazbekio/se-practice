@@ -1,0 +1,4 @@
+2026-11-20 — Codex visual review of genuine Chromium captures.
+Desktop 1280 x 900: labels, Check availability, Available feedback and 10:00–11:00 booking are readable; no clipped or overlapping controls.
+Mobile 390 x 844: fields stack vertically; reversed End 10:30 shows the full error and Unavailable; booking list remains visible; no horizontal clipping.
+These are automated browser interactions and AI visual inspection, not a human manual check or a physical phone test.

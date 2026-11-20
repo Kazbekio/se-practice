@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-20",
+  "original_test_bodies_and_assertions_preserved": true,
+  "original_tests": 19,
+  "regression_tests_added": 1,
+  "production_dependencies_unchanged": true,
+  "test_dependency_added": "jsdom 26.1.0",
+  "reason": "Exercise actual App.tsx and React input events; no mocks or spies replace canBook.",
+  "red_run": "regression-before-fix.txt",
+  "red_exit_code": 1,
+  "observed_failure": "Expected Unavailable; received Available after End changed to 10:30."
+}

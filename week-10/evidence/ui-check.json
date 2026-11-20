@@ -1,0 +1,140 @@
+{
+  "date": "2026-11-20",
+  "method": "Automated Chromium interactions plus Codex visual inspection of the two actual screenshots. No human manual or real-device test is claimed.",
+  "views": [
+    {
+      "name": "desktop",
+      "width": 1280,
+      "height": 900,
+      "checks": [
+        "Exactly one fictional room option",
+        "Default endpoint-touching slot: Available",
+        "R2: End edit updates feedback without a second click",
+        "Blocked toggle updates feedback",
+        "Start equal to current time rejected",
+        "Empty end gives a clear message",
+        "24:00 option still works",
+        "No horizontal overflow; all controls inside viewport",
+        "No page JavaScript errors"
+      ],
+      "layout": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "left": 260,
+            "right": 357,
+            "width": 97
+          },
+          {
+            "tag": "INPUT",
+            "left": 373,
+            "right": 477,
+            "width": 104
+          },
+          {
+            "tag": "INPUT",
+            "left": 493,
+            "right": 597,
+            "width": 104
+          },
+          {
+            "tag": "INPUT",
+            "left": 613,
+            "right": 717,
+            "width": 104
+          },
+          {
+            "tag": "INPUT",
+            "left": 737,
+            "right": 750,
+            "width": 13
+          },
+          {
+            "tag": "INPUT",
+            "left": 867.1875,
+            "right": 880.1875,
+            "width": 13
+          },
+          {
+            "tag": "BUTTON",
+            "left": 260,
+            "right": 401.34375,
+            "width": 141.34375
+          }
+        ]
+      },
+      "pageErrors": [],
+      "screenshot": "evidence/ui-desktop.png",
+      "result": "pass"
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "checks": [
+        "Exactly one fictional room option",
+        "Default endpoint-touching slot: Available",
+        "R2: End edit updates feedback without a second click",
+        "Blocked toggle updates feedback",
+        "Start equal to current time rejected",
+        "Empty end gives a clear message",
+        "24:00 option still works",
+        "No horizontal overflow; all controls inside viewport",
+        "No page JavaScript errors"
+      ],
+      "layout": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "controls": [
+          {
+            "tag": "SELECT",
+            "left": 24,
+            "right": 366,
+            "width": 342
+          },
+          {
+            "tag": "INPUT",
+            "left": 24,
+            "right": 366,
+            "width": 342
+          },
+          {
+            "tag": "INPUT",
+            "left": 24,
+            "right": 366,
+            "width": 342
+          },
+          {
+            "tag": "INPUT",
+            "left": 24,
+            "right": 366,
+            "width": 342
+          },
+          {
+            "tag": "INPUT",
+            "left": 28,
+            "right": 41,
+            "width": 13
+          },
+          {
+            "tag": "INPUT",
+            "left": 28,
+            "right": 41,
+            "width": 13
+          },
+          {
+            "tag": "BUTTON",
+            "left": 24,
+            "right": 165.34375,
+            "width": 141.34375
+          }
+        ]
+      },
+      "pageErrors": [],
+      "screenshot": "evidence/ui-mobile.png",
+      "result": "pass"
+    }
+  ]
+}

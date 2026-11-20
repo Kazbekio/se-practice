@@ -1,0 +1,5 @@
+Planned files, before applying changes: src/availability.ts (new pure form-to-result module), src/App.tsx (use that module and derive feedback from current inputs), and one module-map line in AGENTS.md. I will not change src/booking.ts, its numeric canBook API, existing assertions, package.json or the lockfile in this refactor.
+
+The design problem is independently stored result/error state that drifts from the current form. Extract a pure function for conversion and feedback, and keep only hasChecked in React state. The visible labels, default values, booking fixture and numeric availability rules remain the same. Correcting stale feedback after edits is the intended R2 bug fix. No Strategy or Adapter is justified by one input shape and one fixed policy.
+
+The proposed diff is saved for review before application. The test-only DOM dependency was approved and committed earlier; this production refactor adds no dependency. The existing 19 contract tests must remain green and the red R2 UI test must turn green.

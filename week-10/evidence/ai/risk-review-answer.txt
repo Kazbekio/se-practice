@@ -1,0 +1,19 @@
+I read AGENTS.md, package.json, the lockfile, tsconfig.json, vite.config.ts, src/App.tsx, src/booking.ts and src/booking.test.ts without changing app files. The captured baseline shows 19 passing tests and a passing build. npm run test:unit and npm run lint report missing scripts. These results belong to the recorded baseline, not to tests I have invented.
+
+1. Agent operations: AGENTS.md permits any file edit, new packages, a database/login and a production deployment. Its endpoint rule conflicts with the assignment, and it names a test script that does not exist. An agent following it could change the scope or publish an unchecked app. Compare each rule with the assignment, open package.json, and run the named test script. The conflicting text is certain; an actual deployment and available service credentials are not established.
+
+2. Correctness: src/App.tsx check() stores result and error separately from start, end, now and blocked. The change handlers update the inputs but leave result unchanged. After an available check, an end time earlier than the start can still show Available. Render the real page, check the default slot, change End to 10:30 and inspect the feedback. The state flow is visible in the source; this UI sequence still needs a regression test.
+
+3. Privacy: AGENTS.md asks for real room names and a real KBTU timetable, while the task requires fictional data. Following this rule could bring unnecessary campus data into a public repository. Inspect the instruction and the actual fixtures separately. Current ROOMS entries look fictional, and I have not found personal records or proved any data disclosure. The risk is the instruction to obtain real data, not a claim that a leak already happened.
+
+4. Maintainability: package.json has no lint or format command, no ESLint or Prettier dependency, and there is no such configuration in the imported app. Inconsistent or unsafe edits may pass a build. Check the file list and run npm run lint. The missing automation is certain; no specific style defect is proved by its absence.
+
+5. Reliability: missing: an app CI workflow that runs tests and the build on pushes. A future change may be accepted without the local commands being repeated. Inspect .github/workflows and the repository tree. There is no workflow in this imported checkpoint; I have not inspected any separate external CI service.
+
+6. Maintainability: missing: an app README with setup steps. AGENTS.md gives a short module map, but its test command is wrong. A new contributor may run the wrong check or miss the environment needed for Vitest. Compare the local documentation with package.json and a clean install. The README is absent; this does not mean all documentation is absent.
+
+7. Security: missing: a recorded dependency advisory scan. A lockfile pins versions but does not prove that they have no known issues. Run a suitable advisory check separately if security acceptance is needed. I have not run one and do not claim a CVE, exploit or clean security scan.
+
+8. Scope and correctness: src/App.tsx ROOMS contains two fictional choices, A-101 and B-204. The assignment says one room. Count the options in the source and in the rendered select. This is a confirmed scope mismatch, not evidence that the overlap algorithm is wrong. Keep A-101 and its existing fixture rather than adding a room catalog.
+
+The numeric canBook function already uses strict overlap comparisons and does not append a booking. Existing endpoint and immutability tests pass in the baseline. I do not claim that the old Week 08 bugs are still present. A small pure module for form-to-result logic could reduce UI state drift without changing canBook's numeric API.

@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-20",
+  "baseline_commit": "ffac369",
+  "canBook_source_unchanged": true,
+  "original_19_test_bodies_unchanged": true,
+  "final_agents_changed_lines": 11,
+  "test_count": 20,
+  "production_dependency_specifications_unchanged": true
+}

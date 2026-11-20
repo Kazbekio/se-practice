@@ -1,0 +1,6 @@
+{
+  "README.md": "ee58069b4a0a3be9eadd0129b45ffb6fff6866fdfb3f69958b1906d9ddc62696",
+  "provided/AGENTS.md": "7deb5aed300dfa0520c8784770908821fd075dbabde4799974e8337d6af9425a",
+  "tests/check_audit.py": "80817b2f257e2219838a8035c7bd7bd7619562ccb0916f7d0dc81332c2271cba",
+  "tests/validate_submission.py": "4b3e143771359a07ce7f49aaba98884246e36737dc21bf2332f80b602c63f28e"
+}

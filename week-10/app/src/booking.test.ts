@@ -1,5 +1,9 @@
+// @vitest-environment jsdom
 import { describe, expect, test } from 'vitest';
 import { canBook } from './booking';
+import { act, createElement } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
 
 const fixture = () => ({
   now: 540,
@@ -90,4 +94,46 @@ describe('canBook', () => {
     expect(canBook({ start: 765, end: 810, now: 540, blocked: false, bookings })).toBe(true);
     expect(bookings).toEqual(before);
   });
+});
+
+
+test('R2 AC6: editing form inputs must not keep stale Available feedback', async () => {
+  const flags = globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean };
+  const previousFlag = flags.IS_REACT_ACT_ENVIRONMENT;
+  flags.IS_REACT_ACT_ENVIRONMENT = true;
+  const host = document.createElement('div');
+  document.body.append(host);
+  const root = createRoot(host);
+  const feedback = () => host.querySelector('.result')?.textContent;
+  const setTime = async (input: HTMLInputElement, value: string) => {
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  };
+
+  try {
+    await act(async () => { root.render(createElement(App)); });
+    await act(async () => { host.querySelector('button')!.click(); });
+    expect(feedback()).toBe('Available');
+
+    const times = host.querySelectorAll<HTMLInputElement>('input[type="time"]');
+    await setTime(times[2], '10:30');
+    expect(feedback()).toBe('Unavailable');
+    expect(host.querySelector('.error')?.textContent).toBe('The end time must be after the start time.');
+
+    await setTime(times[2], '12:00');
+    expect(feedback()).toBe('Available');
+    const blocked = host.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')[1];
+    await act(async () => { blocked.click(); });
+    expect(feedback()).toBe('Unavailable');
+    await act(async () => { blocked.click(); });
+    expect(feedback()).toBe('Available');
+    await setTime(times[0], '11:00');
+    expect(feedback()).toBe('Unavailable');
+  } finally {
+    await act(async () => { root.unmount(); });
+    host.remove();
+    flags.IS_REACT_ACT_ENVIRONMENT = previousFlag;
+  }
 });

@@ -1,0 +1,37 @@
+
+> smart-campus-availability@0.0.0 test
+> vitest run
+
+10:26:05 AM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+10:26:05 AM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic', jsxImportSource: undefined }`
+
+ RUN  v4.1.12 /home/nqmvl/se-practice/week-10/app
+
+ ❯ src/booking.test.ts (20 tests | 1 failed) 72ms
+   × R2 AC6: editing form inputs must not keep stale Available feedback 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking.test.ts > R2 AC6: editing form inputs must not keep stale Available feedback
+AssertionError: expected 'Available' to be 'Unavailable' // Object.is equality
+
+Expected: "Unavailable"
+Received: "Available"
+
+ ❯ src/booking.test.ts:122:24
+    120|     const times = host.querySelectorAll<HTMLInputElement>('input[type=…
+    121|     await setTime(times[2], '10:30');
+    122|     expect(feedback()).toBe('Unavailable');
+       |                        ^
+    123|     expect(host.querySelector('.error')?.textContent).toBe('The end ti…
+    124|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  10:26:05
+   Duration  879ms (transform 85ms, setup 0ms, import 174ms, tests 72ms, environment 464ms)
+

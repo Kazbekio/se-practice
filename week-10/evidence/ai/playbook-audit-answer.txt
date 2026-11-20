@@ -1,0 +1,14 @@
+I reviewed AGENTS.md and the assignment documentation. The app has no README. I have not applied this draft.
+
+The real-timetable instruction conflicts with the single fictional room. AC4 wrongly rejects endpoint contact, AC6 is missing, and the test command is not the one in the recorded package scripts. Broad file and package permissions do not limit an agent to a reviewed task. The Supabase/login line conflicts with scope. There is no explicit secrets rule. The final deployment line conflicts with the ban on external deployments, and a successful build alone is not enough for acceptance.
+
+My minimal draft keeps every heading and the existing module map. Replace the realism sentence with: Use one fictional room and fictional bookings; never use real names or timetables.
+Replace AC4 with: Reject overlaps; allow bookings that only touch at endpoints.
+Add AC6: Preserve clear UI feedback on desktop and mobile.
+Replace the test command with npm test.
+Replace the three permission lines with: Edit only files covered by the approved task; preserve AC1–AC6 and show the diff. Do not add packages without approval; keep production dependencies unchanged. Do not add a login, database or persistence.
+Add: Never read, store or transmit secrets, passwords, API keys or personal data.
+Replace the page-load-only finish rule with: Run npm test and npm run build; both must pass before acceptance, and their real output must be attached.
+Replace the deployment rule with: Never deploy or publish externally; do not run deployment commands.
+
+Do not add CI, a backend or a new architecture in this policy patch. Review these ten changed nonblank lines before applying them. The module map can gain one short line later if a reviewed pure form module is added. I am waiting for the delegated review decision; this is only a draft.

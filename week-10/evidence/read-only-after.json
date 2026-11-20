@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-20",
+  "phase": "after read-only review",
+  "source_sha256": {
+    "AGENTS.md": "7deb5aed300dfa0520c8784770908821fd075dbabde4799974e8337d6af9425a",
+    "index.html": "5cd1e86c50458119d06aab3e635b8485e160fef8ff99576dc9f4511f1f37e356",
+    "package-lock.json": "ee2da65013bf015dbc84d4cd5483ef16289f2f02e0f5c5d41d2ac84fdc104fb8",
+    "package.json": "9c4440b3a71b0d2c61c7ea162988f8404349330c66a901c962b6e87e87d435d7",
+    "src/App.tsx": "ba883b9b5ef0aa96b25659fdac53e350c2e7edec7b95677fb83b803899480a0f",
+    "src/booking.test.ts": "500db5780c2bd18d9b120558fc9f1eb2ff9a24d3fbc709360dd812a070a8658c",
+    "src/booking.ts": "57a1b1b783ecd06ace0723d34d4343a8a9af5bc7b56f4a8436a5991c2603ebe2",
+    "src/index.css": "13ec0675d83f92f872288c68f774966a79b6dc1c9a581ffdd7cdf124fa9d93ed",
+    "src/main.tsx": "4a61bfe25f4b731c1ad59ca594045042eeddbfe3602e1f2cf9e4027f4faaa4ec",
+    "tsconfig.json": "5c6b4eba65f6bf8a6fbb0850430a850d10190823d8898b93919dde9257230ba5",
+    "vite.config.ts": "0709465427668ae85ef999f63762d7a06fd92962363fe8cc142ad656d3548115"
+  },
+  "git_status": "",
+  "source_hashes_identical": true
+}
